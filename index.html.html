@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Рабочий стол</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #1B3650;
+    --panel: #22405D;
+    --panel-hover: #294B6B;
+    --ink: #FFFFFF;
+    --ink-soft: #AEBFD1;
+    --ink-faint: #7891A9;
+    --line: rgba(255,255,255,0.14);
+    --cyan: #2CB6D1;
+    --green: #10E1B5;
+    --pink: #F23FA8;
+    --focus: #2CB6D1;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .display { font-family: 'Unbounded', sans-serif; }
+  button { font-family: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .screen { max-width: 920px; margin: 0 auto; padding: 56px 24px 64px; }
+  .screen.hidden { display: none; }
+
+  /* ---------- home ---------- */
+  .home-head-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .home-eyebrow { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; color: var(--ink-faint); }
+  .wordmark { height: 34px; width: auto; display: block; }
+
+  .home-head h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 4.5vw, 34px);
+    letter-spacing: -0.01em;
+    margin: 0 0 36px;
+    max-width: 20ch;
+  }
+
+  .tile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .tile {
+    text-align: left;
+    background: var(--panel);
+    border: none;
+    border-radius: 16px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color .15s ease;
+    min-height: 168px;
+  }
+  .tile:hover, .tile:focus-visible { background: var(--panel-hover); }
+  .tile-mark { font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 24px; }
+  .tile-title { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 18px; margin: 0; color: var(--ink); }
+  .tile-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+
+  .home-foot { margin-top: 28px; font-size: 12px; color: var(--ink-faint); }
+
+  /* ---------- notes screen ---------- */
+  .notes-head { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: none; color: var(--ink-soft);
+    font-size: 13.5px; cursor: pointer; padding: 6px 0;
+  }
+  .back-btn:hover { color: var(--cyan); }
+  .notes-head h1 { font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 22px; margin: 0; color: var(--ink); }
+
+  .notes-layout { display: flex; gap: 28px; align-items: flex-start; }
+  .notes-list { flex: 0 0 230px; }
+  .notes-editor { flex: 1 1 auto; min-width: 0; background: var(--panel); border-radius: 16px; padding: 28px; }
+
+  .new-note-btn {
+    width: 100%; text-align: left; background: none; border: 1px dashed var(--line);
+    border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--ink-soft);
+    cursor: pointer; margin-bottom: 14px;
+  }
+  .new-note-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .note-item {
+    display: block; width: 100%; text-align: left; background: var(--panel); border: none;
+    border-left: 3px solid transparent; border-radius: 10px; padding: 11px 13px; cursor: pointer;
+    margin-bottom: 6px;
+  }
+  .note-item:hover { background: var(--panel-hover); }
+  .note-item.active { border-left-color: var(--cyan); background: var(--panel-hover); }
+  .note-item-title { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .note-item-snippet { font-size: 12px; color: var(--ink-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+  .notes-empty { color: var(--ink-faint); font-size: 13px; padding: 8px 12px; }
+
+  .editor-title {
+    width: 100%; border: none; background: none; font-family: 'Unbounded', sans-serif;
+    font-weight: 600; font-size: 20px; color: var(--ink); padding: 2px 0; margin-bottom: 14px;
+  }
+  .editor-title::placeholder { color: var(--ink-faint); }
+  .editor-body {
+    width: 100%; min-height: 300px; border: none; background: none; resize: vertical;
+    font-family: 'Manrope', sans-serif; font-size: 14.5px; line-height: 1.6; color: var(--ink);
+    padding: 0; border-top: 1px solid var(--line); padding-top: 16px;
+  }
+  .editor-body::placeholder { color: var(--ink-faint); }
+  .editor-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .editor-status { font-size: 12px; color: var(--ink-faint); }
+  .delete-note-btn { background: none; border: none; color: var(--ink-faint); font-size: 12.5px; cursor: pointer; }
+  .delete-note-btn:hover { color: var(--pink); }
+
+  .notes-editor-empty { color: var(--ink-faint); font-size: 13.5px; padding: 40px 0; text-align: center; }
+
+  @media (max-width: 640px) {
+    .screen { padding: 40px 18px 48px; }
+    .tile-grid { grid-template-columns: 1fr; }
+    .notes-layout { flex-direction: column; }
+    .notes-list { flex: none; width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ---------- HOME ---------- -->
+<div class="screen" id="screenHome">
+  <div class="home-head-row">
+    <span class="home-eyebrow">РАБОЧИЙ СТОЛ</span>
+    <svg class="wordmark" viewBox="0 0 1399 479.9" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Север" fill="#FFFFFF">
+      <path d="M734.3,94.9c17.9,0,32.5,1.8,43.8,5.4s19.6,9.2,24.9,17c5.5,7.7,8.2,17.7,8.2,30s-2.5,20.8-7.6,28c-4.3,6.1-10.9,10.9-19.7,14.4.3.1.7.2,1,.3,11.3,3.4,19.5,8.7,24.6,15.8,5.1,7.2,7.6,16.6,7.6,28.3s-2.6,22.5-7.9,30.3-13.5,13.5-24.6,17.2c-10.9,3.8-25.1,5.7-42.4,5.7h-136.2c-16.2,0-29.3-13.1-29.3-29.3V124.2c0-16.2,13.1-29.3,29.3-29.3,0,0,128.3,0,128.3,0ZM462.2,94.9c23.7,0,43,19.2,43,43h-164v33.4h120.5v39.6h-120.5v33.4h167.7c0,23.7-19.2,43-43,43h-146.4c-16.2,0-29.3-13.1-29.3-29.3V124.2c0-16.2,13.1-29.3,29.3-29.3h142.7ZM1057,94.9c23.8,0,43,19.2,43,43h-164v33.4h120.5v39.6h-120.5v33.4h167.7c0,23.7-19.2,43-43,43h-146.4c-16.2,0-29.3-13.1-29.3-29.3V124.2c0-16.2,13.1-29.3,29.3-29.3h142.7ZM1321.5,94.9c18.3,0,33.1,2.4,44.4,7.1s19.6,12,24.9,21.8c5.5,9.6,8.2,22.1,8.2,37.3s-2.7,27.8-8.2,37.6c-5.3,9.6-13.6,16.8-24.9,21.5s-26.1,7.1-44.4,7.1h-100.1v30.7c0,16.2-13.1,29.3-29.3,29.3h-21.7V124.2c0-16.2,13.1-29.3,29.3-29.3h121.8ZM627.7,245.6h135.8v-35.4h-135.8v35.4ZM1344.1,136.5c0,0-57.6,0-122.7,5.4v38.3c85.8,6.8,122.7,5.6,122.7,5.6v-49.2h0ZM627.7,170.7h129.8v-34.2h-129.8v34.2ZM107.8,90.9c17.9,0,36.2.4,54.9,1.1,4.6.1,9.2.3,13.9.5,26.1,1.1,46.5,26.4,47.5,52.4-41.7-4.5-79.9-7.4-114.8-8.8-18.3-.8-32.1-1.2-49.5-1.4v113.1c16.2-.2,30-.7,49.5-1.4,41.9-1.7,80.6-4.6,116.2-8.8-1,26.1-21.4,51.4-47.5,52.4-4.8.2-9.7.4-14.5.5-19.6.8-38.2,1.1-55.7,1.1-28.3,0-50.1-3-65.3-9-15.3-6.2-26.2-16.4-32.8-30.5C3.2,237.8,0,217.5,0,191.3s3.2-46.4,9.6-60.5c6.6-14.3,17.5-24.5,32.8-30.5,15.3-6.2,37-9.3,65.3-9.3h0s0,0,0,0ZM197.4,0C210,0,220.2,12.2,220.2,27.3v24.9s-37.7-11.4-107.2-11.4S5.8,52.3,5.8,52.3v-24.9C5.8,12.2,16,0,28.6,0h168.8,0Z"/>
+      <g>
+        <g>
+          <path d="M203.2,478.7v-59.9l3.6,3.8h-25.7v-13h59.9v13h-25.7l3.6-3.8v59.9h-15.8,0Z"/>
+          <path d="M261.1,478.7v-69.1h32.2c8,0,14.3,1.5,18.8,4.6,4.5,3.1,6.7,7.5,6.7,13.2s-2.1,10.1-6.4,13.2-9.8,4.7-16.7,4.7l1.9-4.1c7.7,0,13.7,1.5,18,4.6,4.3,3.1,6.4,7.6,6.4,13.4s-2.2,10.8-6.8,14.3-11.2,5.2-20,5.2h-34.1ZM276.9,438.2h15c3.4,0,6-.7,7.9-2.2s2.7-3.5,2.7-6.2-.9-4.9-2.7-6.3c-1.8-1.4-4.4-2.1-7.9-2.1h-15v16.8h0ZM276.9,466.9h17.7c3.7,0,6.5-.7,8.4-2.2,1.9-1.5,2.9-3.6,2.9-6.6s-1-5.2-2.9-6.6-4.7-2.1-8.4-2.1h-17.7v17.5h0Z"/>
+          <path d="M377.7,479.9c-5.5,0-10.5-.9-15.1-2.7-4.6-1.8-8.6-4.3-12-7.5s-6.1-7-8-11.4-2.8-9.1-2.8-14.2.9-10,2.8-14.3,4.5-8.1,8-11.3,7.4-5.7,12-7.5c4.6-1.8,9.6-2.7,15.1-2.7s10.5.9,15.1,2.6c4.6,1.8,8.6,4.2,12,7.5s6.1,7,8,11.4,2.8,9.1,2.8,14.3-.9,9.9-2.8,14.3c-1.9,4.4-4.5,8.2-8,11.4s-7.4,5.7-12,7.5-9.6,2.6-15,2.6h0,0ZM377.6,466.4c3.1,0,5.9-.5,8.5-1.6,2.6-1.1,4.9-2.6,6.9-4.6,2-2,3.5-4.4,4.6-7s1.6-5.6,1.6-8.9-.5-6.3-1.6-8.9-2.6-5-4.6-7-4.3-3.5-6.9-4.6c-2.6-1.1-5.4-1.6-8.5-1.6s-6,.5-8.6,1.6c-2.6,1.1-4.9,2.6-6.9,4.6-1.9,2-3.5,4.4-4.5,7s-1.6,5.6-1.6,8.9.5,6.3,1.6,8.9,2.6,5,4.5,7c1.9,2,4.2,3.5,6.9,4.6,2.6,1.1,5.5,1.6,8.6,1.6Z"/>
+          <path d="M437.6,478.7v-69.1h15.8v45.1l33.1-45.1h15v69.1h-15.8v-44.9l-33,44.9h-15.1,0,0ZM469.4,405.1c-6.5,0-11.2-1.3-14.3-4s-4.7-6.4-4.8-11.2h11c0,2.4.8,4.2,2.1,5.4,1.4,1.2,3.3,1.8,6,1.8s4.8-.6,6.2-1.8c1.4-1.2,2.1-3,2.1-5.4h10.9c0,4.8-1.5,8.5-4.6,11.2s-7.9,4-14.5,4h0Z"/>
+          <path d="M599.5,479.9c-5.5,0-10.5-.9-15.1-2.7-4.6-1.8-8.6-4.3-12-7.5s-6.1-7-8-11.4-2.8-9.1-2.8-14.2.9-10,2.8-14.3,4.5-8.1,8-11.3,7.4-5.7,12-7.5c4.6-1.8,9.6-2.7,15.1-2.7s10.5.9,15.1,2.6c4.6,1.8,8.6,4.2,12,7.5s6.1,7,8,11.4,2.8,9.1,2.8,14.3-.9,9.9-2.8,14.3c-1.9,4.4-4.5,8.2-8,11.4s-7.4,5.7-12,7.5-9.6,2.6-15,2.6h0,0ZM599.4,466.4c3.1,0,5.9-.5,8.5-1.6,2.6-1.1,4.9-2.6,6.9-4.6,2-2,3.5-4.4,4.6-7s1.6-5.6,1.6-8.9-.5-6.3-1.6-8.9-2.6-5-4.6-7-4.3-3.5-6.9-4.6c-2.6-1.1-5.4-1.6-8.5-1.6s-6,.5-8.6,1.6c-2.6,1.1-4.9,2.6-6.9,4.6-1.9,2-3.5,4.4-4.5,7s-1.6,5.6-1.6,8.9.5,6.3,1.6,8.9,2.6,5,4.5,7c1.9,2,4.2,3.5,6.9,4.6,2.6,1.1,5.5,1.6,8.6,1.6Z"/>
+        </g>
+        <g>
+          <path d="M659.4,478.7v-69.1h29.9c6.2,0,11.5,1,16,3,4.5,2,7.9,4.9,10.4,8.6,2.4,3.8,3.7,8.2,3.7,13.3s-1.2,9.7-3.7,13.4c-2.4,3.7-5.9,6.6-10.4,8.6-4.5,2-9.8,3.1-16,3.1h-21.1l7.3-7.2v26.3h-16.1ZM675.5,454.2l-7.3-7.6h20.2c4.9,0,8.6-1,11.1-3.2,2.5-2.1,3.8-5.1,3.8-8.9s-1.2-6.8-3.8-8.8-6.2-3.1-11.1-3.1h-20.2l7.3-7.6v39.2h0Z"/>
+        </g>
+        <g>
+          <path d="M739.8,478.7v-69.1h15.8v45.1l33.1-45.1h15v69.1h-15.8v-44.9l-33,44.9h-15.1,0,0Z"/>
+          <path d="M846.7,465.9h37.6v12.8h-53.5v-69.1h52.2v12.8h-36.3v43.5h0ZM845.5,437.3h33.3v12.5h-33.3v-12.5Z"/>
+          <path d="M923.2,478.7h-16.1v-69.1h16.1v69.1ZM955.7,450.4h-33.8v-13.5h33.8v13.5ZM954.5,409.6h16v69.1h-16v-69.1Z"/>
+          <path d="M1012.6,478.7v-59.9l3.7,3.8h-25.7v-13h60v13h-25.7l3.6-3.8v59.9h-15.8,0,0Z"/>
+          <path d="M1070.5,478.7v-69.1h15.8v45.1l33.1-45.1h15v69.1h-15.8v-44.9l-33,44.9h-15.1,0Z"/>
+          <path d="M1161.4,478.7v-69.1h29.9c6.2,0,11.5,1,16,3,4.5,2,7.9,4.9,10.4,8.6s3.7,8.2,3.7,13.3-1.2,9.7-3.7,13.4-5.9,6.6-10.4,8.6c-4.5,2-9.8,3.1-16,3.1h-21.1l7.3-7.2v26.3h-16.1ZM1177.6,454.2l-7.3-7.6h20.2c4.9,0,8.6-1,11.1-3.2,2.5-2.1,3.8-5.1,3.8-8.9s-1.2-6.8-3.8-8.8-6.2-3.1-11.1-3.1h-20.2l7.3-7.6v39.2h0Z"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="home-head">
+    <h1 class="display">Digital Hub</h1>
+  </div>
+  <div class="tile-grid">
+    <a class="tile" href="https://claude.ai/artifact/2DRjsLsfXf6f1J63ZnK7wu" target="_blank" rel="noopener">
+      <span class="tile-mark" style="color: var(--cyan);">↗</span>
+      <h2 class="tile-title">Дорожные карты</h2>
+      <p class="tile-desc">План проекта — сроки, ответственные и диаграмма Ганта</p>
+    </a>
+    <button class="tile" id="navNotes" type="button">
+      <span class="tile-mark" style="color: var(--green);">→</span>
+      <h2 class="tile-title">Заметки</h2>
+      <p class="tile-desc">Быстрые записи в текстовом виде — хранятся прямо здесь</p>
+    </button>
+    <a class="tile" href="https://script.google.com/macros/s/AKfycbwkRc1piOPk7T7Ih-QCUkKHuhPy8Xh5HnHKTurWR7OeSoGc3n7I5IM5hIhSHnjczRJB/exec" target="_blank" rel="noopener">
+      <span class="tile-mark" style="color: var(--pink);">↗</span>
+      <h2 class="tile-title">Справочник источников</h2>
+      <p class="tile-desc">Здесь же можно сгенерировать UTM-метку — открывается в отдельной вкладке</p>
+    </a>
+    <a class="tile" href="https://docs.google.com/spreadsheets/d/198_LrEC4b04EuguRXT3MmGSx1E4ENQeQHgezC1YFby8/edit?gid=0#gid=0" target="_blank" rel="noopener">
+      <span class="tile-mark" style="color: var(--cyan);">↗</span>
+      <h2 class="tile-title">Мониторинг брендового спроса</h2>
+      <p class="tile-desc">Таблица с динамикой спроса — открывается в Google Таблицах</p>
+    </a>
+  </div>
+  <p class="home-foot" id="storageNote"></p>
+</div>
+
+<!-- ---------- NOTES ---------- -->
+<div class="screen hidden" id="screenNotes">
+  <div class="notes-head">
+    <button class="back-btn" id="navHome" type="button">← Рабочий стол</button>
+  </div>
+  <h1 class="display" style="margin-bottom:24px;">Заметки</h1>
+  <div class="notes-layout">
+    <div class="notes-list">
+      <button class="new-note-btn" id="btnNewNote" type="button">+ Новая заметка</button>
+      <div id="notesListEl"></div>
+    </div>
+    <div class="notes-editor" id="notesEditorEl">
+      <p class="notes-editor-empty">Выберите заметку слева или создайте новую.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ЗАПОЛНИТЕ адресом вашей развёрнутой presign-функции (см. presign-function.js)
+  var FUNCTION_URL = "https://functions.yandexcloud.net/d4ega35alhn28oab98di";
+  var POLL_MS = 15000; // как часто подтягивать чужие правки
+
+  var state = { notes: [], dbMode: null, activeId: null };
+  var LOCAL_KEY = "onboarding_notes_v1";
+  var saveTimer = null;
+  var pollTimer = null;
+  var writeInFlight = false;
+
+  function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // ---------- navigation ----------
+  function showScreen(id) {
+    document.getElementById("screenHome").classList.toggle("hidden", id !== "home");
+    document.getElementById("screenNotes").classList.toggle("hidden", id !== "notes");
+    if (id === "notes") renderNotesScreen();
+  }
+  document.getElementById("navNotes").addEventListener("click", function () { showScreen("notes"); });
+  document.getElementById("navHome").addEventListener("click", function () { showScreen("home"); });
+
+  // ---------- local fallback (used only if the bucket is unreachable) ----------
+  function saveLocal() {
+    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(state.notes)); } catch (e) {}
+  }
+  function loadLocal() {
+    try {
+      var raw = localStorage.getItem(LOCAL_KEY);
+      if (raw) state.notes = JSON.parse(raw) || [];
+    } catch (e) {}
+  }
+
+  // ---------- bucket storage (shared across everyone with the function's URL) ----------
+  function initStorage() {
+    loadFromBucket(true);
+    pollTimer = setInterval(function () { loadFromBucket(false); }, POLL_MS);
+  }
+
+  function loadFromBucket(isFirstLoad) {
+    fetch(FUNCTION_URL, { method: "GET" })
+      .then(function (r) { if (!r.ok) throw new Error("presign failed"); return r.json(); })
+      .then(function (data) { return fetch(data.url); })
+      .then(function (r) {
+        if (r.status === 404) return []; // nothing saved yet
+        if (!r.ok) throw new Error("read failed");
+        return r.json();
+      })
+      .then(function (notes) {
+        state.dbMode = "bucket";
+        document.getElementById("storageNote").textContent = "";
+        // don't clobber an in-progress edit with a background poll
+        if (isFirstLoad || document.activeElement === null || !document.getElementById("editorBody") || document.activeElement.id !== "editorBody") {
+          state.notes = (notes || []).slice().sort(function (a, b) { return (b.updatedAt || 0) - (a.updatedAt || 0); });
+          renderNotesScreen();
+        }
+      })
+      .catch(function () {
+        if (state.dbMode === "bucket") return; // transient network hiccup — keep last known state, next poll retries
+        fallbackLocal();
+      });
+  }
+
+  function fallbackLocal() {
+    if (state.dbMode === "bucket") return;
+    state.dbMode = "local";
+    loadLocal();
+    document.getElementById("storageNote").textContent = "Не удалось подключиться к общему хранилищу — заметки сохраняются только в этом браузере. Проверьте FUNCTION_URL и настройки бакета.";
+    renderNotesScreen();
+  }
+
+  function persistAllNotes() {
+    if (state.dbMode !== "bucket") { saveLocal(); return Promise.resolve(); }
+    writeInFlight = true;
+    return fetch(FUNCTION_URL, { method: "POST" })
+      .then(function (r) { if (!r.ok) throw new Error("presign failed"); return r.json(); })
+      .then(function (data) {
+        return fetch(data.url, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state.notes),
+        });
+      })
+      .then(function (r) { if (!r.ok) throw new Error("write failed"); })
+      .catch(function () {
+        var el = document.getElementById("editorStatus");
+        if (el) el.textContent = "Не удалось сохранить — проверьте соединение";
+      })
+      .finally(function () { writeInFlight = false; });
+  }
+
+  function writeNote(note) {
+    var idx = state.notes.findIndex(function (n) { return n.id === note.id; });
+    if (idx >= 0) state.notes[idx] = note; else state.notes.unshift(note);
+    state.notes.sort(function (a, b) { return (b.updatedAt || 0) - (a.updatedAt || 0); });
+    persistAllNotes();
+  }
+  function deleteNote(id) {
+    state.notes = state.notes.filter(function (n) { return n.id !== id; });
+    if (state.activeId === id) state.activeId = null;
+    persistAllNotes();
+    renderNotesScreen();
+  }
+
+  // ---------- rendering ----------
+  function renderNotesScreen() {
+    var listEl = document.getElementById("notesListEl");
+    if (state.notes.length === 0) {
+      listEl.innerHTML = '<p class="notes-empty">Заметок пока нет.</p>';
+    } else {
+      listEl.innerHTML = state.notes.map(function (n) {
+        var snippet = (n.body || "").split("\n").find(function (l) { return l.trim(); }) || "Без текста";
+        return '<button class="note-item' + (n.id === state.activeId ? " active" : "") + '" data-id="' + n.id + '">' +
+          '<div class="note-item-title">' + escapeHtml(n.title || "Без названия") + "</div>" +
+          '<div class="note-item-snippet">' + escapeHtml(snippet) + "</div>" +
+        "</button>";
+      }).join("");
+      Array.prototype.forEach.call(listEl.querySelectorAll(".note-item"), function (btn) {
+        btn.addEventListener("click", function () { state.activeId = btn.getAttribute("data-id"); renderNotesScreen(); });
+      });
+    }
+    renderEditor();
+  }
+
+  function renderEditor() {
+    var editorEl = document.getElementById("notesEditorEl");
+    var note = state.notes.find(function (n) { return n.id === state.activeId; });
+    if (!note) {
+      editorEl.innerHTML = '<p class="notes-editor-empty">Выберите заметку слева или создайте новую.</p>';
+      return;
+    }
+    editorEl.innerHTML =
+      '<input type="text" class="editor-title" id="editorTitle" placeholder="Название" value="' + escapeHtml(note.title || "") + '">' +
+      '<textarea class="editor-body" id="editorBody" placeholder="Текст заметки…">' + escapeHtml(note.body || "") + "</textarea>" +
+      '<div class="editor-foot"><span class="editor-status" id="editorStatus">&nbsp;</span><button class="delete-note-btn" id="btnDeleteNote" type="button">Удалить заметку</button></div>';
+
+    function scheduleSave() {
+      document.getElementById("editorStatus").textContent = "Сохраняем…";
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
+        note.title = document.getElementById("editorTitle").value;
+        note.body = document.getElementById("editorBody").value;
+        note.updatedAt = Date.now();
+        writeNote(note);
+        var statusEl = document.getElementById("editorStatus");
+        if (statusEl) statusEl.textContent = "Сохранено";
+        var listEl = document.getElementById("notesListEl");
+        if (listEl) {
+          var item = listEl.querySelector('[data-id="' + note.id + '"] .note-item-title');
+          if (item) item.textContent = note.title || "Без названия";
+        }
+      }, 500);
+    }
+    document.getElementById("editorTitle").addEventListener("input", scheduleSave);
+    document.getElementById("editorBody").addEventListener("input", scheduleSave);
+    document.getElementById("btnDeleteNote").addEventListener("click", function () { deleteNote(note.id); });
+  }
+
+  document.getElementById("btnNewNote").addEventListener("click", function () {
+    var note = { id: uid(), title: "", body: "", updatedAt: Date.now() };
+    state.notes.unshift(note);
+    state.activeId = note.id;
+    writeNote(note);
+    renderNotesScreen();
+    setTimeout(function () { var t = document.getElementById("editorTitle"); if (t) t.focus(); }, 0);
+  });
+
+  initStorage();
+})();
+</script>
+</body>
+</html>
