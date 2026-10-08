@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>План проекта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0F2F4;
+    --panel: #FFFFFF;
+    --panel-alt: #F7F8FA;
+    --ink: #1B222B;
+    --ink-soft: #5B6572;
+    --ink-faint: #99A3AD;
+    --border: #DADFE4;
+    --border-soft: #E7EAED;
+    --accent: #2F6FCC;
+    --accent-strong: #23579E;
+    --accent-tint: rgba(47,111,204,.1);
+    --accent-on: #FFFFFF;
+    --weekend: rgba(47,111,204,.06);
+    --holiday: rgba(194,78,48,.10);
+    --today: #C24E30;
+    --dep-line: #8A93A0;
+    --done: #1F8A54;
+    --danger: #C24E30;
+    --focus-ring: #2F6FCC;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10151C; --panel: #171E27; --panel-alt: #1C242F;
+      --ink: #E8ECEF; --ink-soft: #9AA6B2; --ink-faint: #6B7684;
+      --border: #2A333F; --border-soft: #232B36;
+      --accent: #5B9BE8; --accent-strong: #7FB0EE; --accent-on: #0C1420; --accent-tint: rgba(91,155,232,.14);
+      --weekend: rgba(91,155,232,.08); --holiday: rgba(224,122,84,.14); --today: #E07A54; --done: #4EA672; --danger: #E07A54; --dep-line: #6B7684;
+      --focus-ring: #5B9BE8;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10151C; --panel: #171E27; --panel-alt: #1C242F;
+    --ink: #E8ECEF; --ink-soft: #9AA6B2; --ink-faint: #6B7684;
+    --border: #2A333F; --border-soft: #232B36;
+    --accent: #5B9BE8; --accent-strong: #7FB0EE; --accent-on: #0C1420; --accent-tint: rgba(91,155,232,.14);
+    --weekend: rgba(91,155,232,.08); --holiday: rgba(224,122,84,.14); --today: #E07A54; --done: #4EA672; --danger: #E07A54; --dep-line: #6B7684;
+    --focus-ring: #5B9BE8;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    background-image:
+      linear-gradient(var(--border-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea, select { font-family: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+  ::-webkit-scrollbar { height: 10px; width: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  .hidden { display: none !important; }
+
+  /* ---------- library ---------- */
+  .libScreen { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 32px 40px 60px; max-width: 1180px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+  .libTopbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+  .libFilters { display: flex; gap: 10px; margin-bottom: 24px; }
+  .libFilters input[type="text"] { flex: 1; max-width: 320px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13.5px; color: var(--ink); }
+  .libFilters select { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13.5px; color: var(--ink); }
+  .libGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .libCard {
+    text-align: left; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; cursor: pointer; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .15s ease, transform .1s ease;
+  }
+  .libCard:hover, .libCard:focus-visible { border-color: var(--accent); transform: translateY(-1px); }
+  .libCard-topic { display: inline-flex; align-self: flex-start; font-size: 11px; font-weight: 600; color: var(--accent-strong); background: var(--accent-tint, rgba(47,111,204,.1)); padding: 3px 9px; border-radius: 999px; }
+  .libCard h2 { margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: var(--ink); line-height: 1.3; }
+  .libCard p { margin: 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; min-height: 1.5em; }
+  .libCard-meta { display: flex; gap: 12px; font-size: 11.5px; color: var(--ink-faint); }
+  .libCard-bar { height: 5px; border-radius: 3px; background: var(--border-soft); overflow: hidden; }
+  .libCard-bar i { display: block; height: 100%; background: var(--done); }
+  .libCard-foot { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
+  .libEmpty { color: var(--ink-faint); font-size: 13.5px; text-align: center; padding: 60px 0; }
+  .btn-back { background: none; border: none; color: var(--ink-soft); font-size: 13px; cursor: pointer; padding: 0; margin-right: 2px; }
+  .btn-back:hover { color: var(--accent-strong); }
+
+  /* ---------- project header (editable title/description/topic) ---------- */
+  .projectHeader { flex: 0 0 auto; background: var(--panel); border-bottom: 1px solid var(--border); padding: 16px 20px 14px; display: flex; gap: 14px; align-items: flex-start; }
+  .projectHeaderMain { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+  .projTitleInput {
+    border: none; background: none; width: 100%; font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 20px; color: var(--ink); padding: 3px 4px; margin: -3px -4px; border-radius: 4px;
+  }
+  .projTitleInput:hover, .projTitleInput:focus { background: var(--panel-alt); }
+  .projDescInput {
+    border: none; background: none; width: 100%; font-size: 13px; color: var(--ink-soft);
+    padding: 2px 4px; margin: -2px -4px; border-radius: 4px;
+  }
+  .projDescInput:hover, .projDescInput:focus { background: var(--panel-alt); }
+  .projTopicInput {
+    border: none; background: none; max-width: 240px; font-size: 11.5px; color: var(--ink-faint);
+    padding: 2px 4px; margin: -2px -4px -2px -4px; border-radius: 4px;
+  }
+  .projTopicInput:hover, .projTopicInput:focus { background: var(--panel-alt); color: var(--accent-strong); }
+  .projTopicRow { display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+  .projTopicLabel { font-size: 11.5px; color: var(--ink-faint); }
+
+  /* ---------- topbar ---------- */
+  .topbar {
+    flex: 0 0 auto;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display:flex; align-items:baseline; gap:10px; margin-right:auto; }
+  .brand h1 {
+    font-family: 'Space Grotesk', sans-serif; font-weight:700; font-size:21px; margin:0; letter-spacing:-0.01em;
+  }
+  .brand .sub { color: var(--ink-faint); font-size: 12.5px; }
+  .stat-inline { display:flex; gap:14px; font-size:12px; color:var(--ink-soft); margin-right:8px; }
+  .stat-inline b { color: var(--ink); font-weight:600; }
+  select.zoom {
+    background: var(--panel-alt); border:1px solid var(--border); border-radius:6px;
+    padding:8px 10px; font-size:13px;
+  }
+  .btn {
+    border:1px solid var(--border); background: var(--panel-alt); color: var(--ink);
+    border-radius:6px; padding:8px 13px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:6px;
+  }
+  .btn:hover { border-color: var(--ink-faint); }
+  .btn-primary { background: var(--accent); color: var(--accent-on); border:none; font-weight:600; }
+  .btn-primary:hover { background: var(--accent-strong); }
+  .btn:disabled { opacity:.5; cursor:default; }
+
+  .filtersRow {
+    flex: 0 0 auto;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding: 10px 20px; border-bottom:1px solid var(--border); background: var(--bg);
+  }
+  .filtersRow input[type="text"], .filtersRow select {
+    background: var(--panel); border:1px solid var(--border); border-radius:6px;
+    padding:7px 10px; font-size:12.5px; color:var(--ink);
+  }
+  .filtersRow input[type="text"] { width:180px; }
+  .chk { display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); }
+
+  .banner { flex:0 0 auto; padding:8px 20px; background: var(--panel-alt); border-bottom:1px solid var(--border); font-size:12.5px; color:var(--ink-soft); display:none; }
+
+  /* ---------- gantt viewport ---------- */
+  .ganttViewport { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+
+  .topRow { position: sticky; top:0; z-index: 15; display:flex; background: var(--panel); border-bottom:1px solid var(--border); }
+  .sidebarHeadCell { flex: 0 0 var(--sbw); width: var(--sbw); display:flex; border-right:1px solid var(--border); position:relative; }
+  .sidebarHeadCell div { padding:8px 10px; font-size:11px; font-weight:600; color:var(--ink-faint); display:flex; align-items:center; }
+  .col-title { width:var(--col-title-w); flex:0 0 var(--col-title-w); min-width:0; }
+  .col-who { width:var(--col-who-w); flex:0 0 var(--col-who-w); padding:0 8px; }
+  .col-days { width:var(--col-days-w); flex:0 0 var(--col-days-w); justify-content:flex-end; padding:0 10px 0 8px; }
+  .colResizer { position:absolute; top:0; bottom:0; width:9px; cursor:col-resize; z-index:3; touch-action:none; }
+  .colResizer::after { content:""; position:absolute; left:4px; top:9px; bottom:9px; width:1px; background:var(--border); }
+  .colResizer:hover::after, .colResizer.active::after { background:var(--accent); width:2px; left:3.5px; }
+  body.resizing-cols, body.resizing-cols * { cursor:col-resize !important; user-select:none !important; }
+  .timelineHeadScroll { flex:1 1 auto; overflow:hidden; position:relative; }
+  .timelineHeadInner { position:relative; height:54px; }
+  .monthBand { position:absolute; top:0; height:22px; border-right:1px solid var(--border-soft); display:flex; align-items:center; padding-left:8px; font-size:12px; font-weight:600; font-family:'Space Grotesk',sans-serif; color:var(--ink-soft); white-space:nowrap; overflow:hidden; }
+  .dayCell { position:absolute; top:22px; height:32px; border-right:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--ink-faint); }
+  .dayCell.weekend { background: var(--weekend); }
+
+  .mainRow { display:flex; align-items:flex-start; }
+  .sidebar { flex: 0 0 var(--sbw); width: var(--sbw); border-right:1px solid var(--border); background: var(--panel); }
+  .sidebarRows { position:relative; }
+  .timelineBodyScroll { flex:1 1 auto; overflow-x:auto; overflow-y:hidden; position:relative; }
+  .timelineBodyInner { position:relative; }
+  .gridLayer, .rowsLayer { position:absolute; top:0; left:0; }
+  .depsLayer { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; z-index:6; }
+  .depPath { fill:none; stroke:var(--dep-line); stroke-width:1.6; }
+  .depPath.warn { stroke:var(--danger); stroke-width:1.8; }
+  .depHit { fill:none; stroke:transparent; stroke-width:11; pointer-events:stroke; cursor:pointer; }
+  .depHit:hover + .depPath { stroke:var(--danger); stroke-width:2.4; }
+  .monthLine { position:absolute; top:0; border-left:1px solid var(--border-soft); }
+  .weekendRect { position:absolute; top:0; background: var(--weekend); }
+  .weekendRect.holiday { background: var(--holiday); }
+
+  .sideRow, .groupSideRow { position:absolute; left:0; width:100%; display:flex; align-items:center; border-bottom:1px solid var(--border-soft); }
+  .sideRow:hover { background: var(--panel-alt); }
+  .sideRow .col-title { display:flex; flex-direction:column; gap:2px; min-width:0; cursor:pointer; padding:0 8px 0 10px; }
+  .sideRow .t-title { font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sideRow .t-progress { height:3px; border-radius:2px; background: var(--border-soft); overflow:hidden; }
+  .sideRow .t-progress i { display:block; height:100%; }
+  .who-chip { display:flex; align-items:center; gap:5px; min-width:0; }
+  .avatar { width:19px; height:19px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#fff; }
+  .who-name { font-size:11.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t-days { font-size:11px; color:var(--ink-faint); text-align:right; }
+
+  .groupSideRow { padding:0 10px; gap:8px; background: var(--panel-alt); font-family:'Space Grotesk',sans-serif; }
+  .groupDot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
+  .groupSideRow input.gTitle { flex:1 1 auto; min-width:0; background:none; border:none; font-size:12.5px; font-weight:600; color:var(--ink); padding:2px 0; font-family:'Space Grotesk',sans-serif; }
+  .groupSideRow .gCount { font-size:11px; color:var(--ink-faint); flex-shrink:0; }
+  .groupActions { display:flex; gap:1px; flex-shrink:0; }
+  .iconBtn { background:none; border:none; color:var(--ink-faint); width:20px; height:20px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  .iconBtn:hover { background:var(--border-soft); color:var(--ink); }
+
+
+  .groupBar { position:absolute; pointer-events:none; display:flex; align-items:center; z-index:2; }
+  .groupBar .gb-bg { position:absolute; left:0; right:0; top:0; bottom:0; opacity:.3; border-radius:3px; }
+  .groupBar .gb-fill { position:absolute; left:0; top:0; bottom:0; border-radius:3px; max-width:100%; opacity:.9; }
+  .groupBar .gb-tick { position:absolute; top:13px; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:6px solid; }
+  .groupBar .gb-l { left:0; } .groupBar .gb-r { right:0; }
+  .groupBar .gb-label { position:relative; z-index:1; font-size:11px; font-weight:700; color:var(--ink); padding:0 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .groupBar.outside-label .gb-label { position:absolute; left:100%; margin-left:8px; padding:0; overflow:visible; font-weight:600; color:var(--ink-soft); }
+  .groupBand { position:absolute; left:0; width:100%; border-bottom:1px solid var(--border-soft); }
+
+  .bar { position:absolute; border-radius:3px; cursor:grab; display:flex; align-items:center; overflow:visible; }
+  .bar .fill-bg { position:absolute; inset:0; opacity:.28; border-radius:3px; overflow:hidden; }
+  .bar .fill-progress { position:absolute; top:0; left:0; bottom:0; border-radius:3px; overflow:hidden; }
+  .bar .bar-label { position:relative; z-index:1; font-size:11px; font-weight:600; color:#fff; padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 1px rgba(0,0,0,.25); pointer-events:none; }
+  .bar.outside-label .bar-label { color: var(--ink); text-shadow:none; position:absolute; left:100%; margin-left:6px; }
+  .barHandle { position:absolute; top:0; bottom:0; width:8px; cursor:ew-resize; z-index:3; }
+  .barHandle.bh-l { left:-2px; }
+  .barHandle.bh-r { right:-2px; }
+  .barHandle::after { content:""; position:absolute; top:25%; bottom:25%; left:3px; width:2px; border-radius:1px; background:rgba(255,255,255,.85); opacity:0; }
+  .bar:hover .barHandle::after { opacity:1; }
+  .bar.outside-label .barHandle::after { background: var(--ink-faint); }
+  .milestone { position:absolute; width:15px; height:15px; transform:rotate(45deg); cursor:grab; }
+  .milestoneLabel { position:absolute; font-size:11px; font-weight:600; color:var(--ink); white-space:nowrap; pointer-events:none; }
+  .linkHandle { position:absolute; top:50%; right:-6px; width:11px; height:11px; margin-top:-5.5px; border-radius:50%; background:var(--panel); border:2px solid var(--accent); cursor:crosshair; z-index:5; opacity:0; transition:opacity .12s, transform .12s; }
+  .bar:hover .linkHandle { opacity:1; }
+  .linkHandle:hover { transform:scale(1.25); }
+  .ghostLinkPath { fill:none; stroke:var(--accent); stroke-width:1.6; stroke-dasharray:4 3; }
+  .dropTargetHighlight { outline:2px solid var(--accent); outline-offset:1px; }
+  body.dragging-bar, body.dragging-bar * { user-select:none !important; }
+  body.dragging-bar .bar, body.dragging-bar .milestone { cursor:grabbing !important; }
+  body.linking-deps, body.linking-deps * { user-select:none !important; cursor:crosshair !important; }
+
+  .addStageFooter { padding:9px 14px; }
+  .addStageFooter button { border:1px dashed var(--border); background:none; color:var(--ink-soft); border-radius:6px; padding:7px 12px; font-size:12.5px; width: 100%; box-sizing:border-box; }
+  .addStageFooter button:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+  /* ---------- modal ---------- */
+  .overlay { position:fixed; inset:0; background:rgba(10,14,18,.45); display:flex; align-items:center; justify-content:center; z-index:200; padding:20px; }
+  .modal { background: var(--panel); border-radius:8px; border:1px solid var(--border); width:100%; max-width:460px; max-height:88vh; overflow-y:auto; overflow-x:hidden; padding:22px; }
+  .modal h2 { font-family:'Space Grotesk',sans-serif; font-size:17px; margin:0 0 16px; }
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:11.5px; color:var(--ink-soft); margin-bottom:5px; font-weight:500; }
+  .field input[type="text"], .field input[type="date"], .field input[type="number"], .field select, .field textarea {
+    width:100%; background: var(--panel-alt); border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:13.5px; color:var(--ink);
+  }
+  .row2 { display:flex; gap:10px; }
+  .row2 .field { flex:1 1 0; min-width:0; }
+  .assigneeRow { display:flex; gap:8px; }
+  .assigneeRow select { flex:1; }
+  .swatches { display:flex; gap:7px; margin-top:8px; }
+  .swatch { width:20px; height:20px; border-radius:50%; border:2px solid transparent; }
+  .swatch.active { border-color: var(--ink); }
+  .rangeRow { display:flex; align-items:center; gap:10px; }
+  .rangeRow input[type="range"] { flex:1; }
+  .rangeVal { font-size:12.5px; color:var(--ink-soft); width:38px; text-align:right; }
+  .checkline { display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-soft); }
+  .modal-actions { display:flex; justify-content:space-between; align-items:center; margin-top:18px; gap:10px; }
+  .right-actions { display:flex; gap:8px; }
+  .btn-ghost { background:none; border:1px solid var(--border); border-radius:6px; padding:8px 13px; font-size:13px; color:var(--ink-soft); }
+  .btn-danger { color: var(--danger); }
+  .btn-danger:hover { background: rgba(194,78,48,.08); }
+
+  .teamList, .stageList { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; max-height:220px; overflow-y:auto; }
+  .teamRow { display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid var(--border-soft); border-radius:6px; }
+  .teamRow input[type="text"] { flex:1; border:none; background:none; font-size:13px; padding:2px 0; }
+  .addRow { display:flex; gap:8px; }
+  .addRow input[type="text"] { flex:1; }
+
+
+  .shareBox { display:flex; gap:8px; margin:10px 0 6px; }
+  .shareBox input { flex:1; min-width:0; background:var(--panel-alt); border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:12.5px; color:var(--ink); }
+  .shareNote { font-size:12px; color:var(--ink-soft); line-height:1.55; margin:0 0 8px; }
+  .shareErr { font-size:12px; line-height:1.5; color:var(--danger); background:rgba(194,78,48,.08); border-radius:6px; padding:8px 10px; margin:12px 0 0; }
+  .shareState { font-size:11.5px; color:var(--ink-faint); margin:6px 0 0; }
+
+  /* print / export overlay */
+  .printOverlay { position:fixed; inset:0; background: var(--bg); z-index:5000; display:none; align-items:center; justify-content:center; flex-direction:column; gap:10px; }
+  .printOverlay.show { display:flex; }
+  .spinner { width:28px; height:28px; border-radius:50%; border:3px solid var(--border); border-top-color: var(--accent); animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 720px) {
+    .stat-inline { display:none; }
+    .filtersRow input[type="text"] { width:130px; }
+  }
+</style>
+</head>
+<body style="--col-title-w:150px; --col-who-w:110px; --col-days-w:80px; --sbw:calc(var(--col-title-w) + var(--col-who-w) + var(--col-days-w));">
+
+<!-- ========== LIBRARY VIEW ========== -->
+<div class="libScreen" id="viewLibrary">
+  <div class="libTopbar">
+    <div class="brand">
+      <h1>Библиотека дорожных карт</h1>
+      <span class="sub">все проекты — ищите по названию или теме</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn-ghost" id="btnChangePw" type="button">Сменить пароль</button>
+      <button class="btn-ghost" id="btnImport" type="button">Импорт карт</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
+      <button class="btn btn-primary" id="btnNewProject">+ Новый проект</button>
+    </div>
+  </div>
+  <div class="libFilters">
+    <input type="text" id="libSearch" placeholder="Поиск по названию…">
+    <select id="libTopic"><option value="all">Все темы</option></select>
+  </div>
+  <div class="libGrid" id="libGrid"></div>
+  <p class="libEmpty" id="libEmpty" style="display:none;">Ничего не нашлось — попробуйте другой запрос или тему.</p>
+</div>
+
+<!-- ========== PROJECT VIEW ========== -->
+<div id="viewProject" class="hidden">
+<div class="projectHeader">
+  <button class="btn-back" id="btnBackToLibrary" title="К библиотеке">← Библиотека</button>
+  <div class="projectHeaderMain">
+    <input type="text" class="projTitleInput" id="projectTitle" placeholder="Название проекта">
+    <input type="text" class="projDescInput" id="projectDesc" placeholder="Добавьте краткое описание проекта…">
+    <div class="projTopicRow"><span class="projTopicLabel">Тема:</span><input type="text" class="projTopicInput" id="projectTopic" placeholder="не указана"></div>
+  </div>
+  <button class="btn-ghost btn-danger" id="btnDeleteProject" type="button" style="margin-left:auto;">Удалить карту</button>
+</div>
+<div class="topbar">
+  <div class="stat-inline" id="statInline" style="margin-right:auto;"></div>
+  <select class="zoom" id="zoomSelect">
+    <option value="day">Крупный масштаб</option>
+    <option value="week" selected>Средний масштаб</option>
+    <option value="month">Компактный масштаб</option>
+  </select>
+  <button class="btn" id="btnTeam">Команда</button>
+  <button class="btn" id="btnHolidays">Праздники</button>
+  <button class="btn" id="btnShare">Поделиться</button>
+  <button class="btn" id="btnPdf">Экспорт в PDF</button>
+  <button class="btn btn-primary" id="btnAddTask">+ Задача</button>
+</div>
+
+<div class="filtersRow">
+  <input type="text" id="fSearch" placeholder="Поиск по названию…">
+  <select id="fAssignee"><option value="all">Все исполнители</option></select>
+  <label class="chk"><input type="checkbox" id="fHideDone"> Скрыть завершённые</label>
+</div>
+
+<div class="banner" id="banner"><span id="bannerText"></span></div>
+
+<div class="ganttViewport" id="ganttViewport">
+  <div class="topRow">
+    <div class="sidebarHeadCell">
+      <div class="col-title">Задача</div>
+      <div class="colResizer" data-resize="title" title="Потяните, чтобы изменить ширину" style="left:calc(var(--col-title-w) - 4.5px);"></div>
+      <div class="col-who">Исполнитель</div>
+      <div class="colResizer" data-resize="who" title="Потяните, чтобы изменить ширину" style="left:calc(var(--col-title-w) + var(--col-who-w) - 4.5px);"></div>
+      <div class="col-days">Дни (раб.)</div>
+    </div>
+    <div class="timelineHeadScroll" id="timelineHeadScroll">
+      <div class="timelineHeadInner" id="timelineHeadInner"></div>
+    </div>
+  </div>
+  <div class="mainRow">
+    <div class="sidebar">
+      <div class="sidebarRows" id="sidebarRows"></div>
+      <div class="addStageFooter"><button id="btnAddStage">+ Добавить этап</button></div>
+    </div>
+    <div class="timelineBodyScroll" id="timelineBodyScroll">
+      <div class="timelineBodyInner" id="timelineBodyInner">
+        <div class="gridLayer" id="gridLayer"></div>
+        <div class="rowsLayer" id="rowsLayer"></div>
+        <svg class="depsLayer" id="depsLayer" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowNormal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--dep-line);"></path>
+            </marker>
+            <marker id="arrowWarn" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--danger);"></path>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /#viewProject -->
+
+<div id="modalRoot"></div>
+<div id="authRoot"></div>
+<div class="printOverlay" id="printOverlay"><div class="spinner"></div><div id="printOverlayText" style="font-size:13px;color:var(--ink-soft);">Готовим PDF…</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.4/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SWATCHES = ["#2F6FCC", "#1F8A54", "#8A5FBF", "#C24E30", "#B8752B", "#0F9AA6", "#C2477F"];
+  var RH = 40, GH = 34;
+  var ZOOM_WIDTH = { day: 34, week: 14, month: 6 };
+
+  var state = {
+    view: "library", // "library" | "project"
+    projectId: null,
+    projects: [],    // catalog: [{id,name,description,topic,color,createdAt,taskCount,avgProgress,maxEnd}]
+    libSearch: "",
+    libTopic: "all",
+    groups: [],
+    team: [],
+    tasks: [],
+    holidays: [],
+    zoom: "week",
+    search: "",
+    assigneeFilter: "all",
+    hideDone: false,
+    catalogLoaded: false,
+    editingTask: null
+  };
+
+  // ---------- utils ----------
+  function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function toDayNum(v) { var n = parseInt(v, 10); return isNaN(n) || n < 1 ? 1 : n; }
+  // Virtual work-week: day 1 = "Monday". Positions 6 and 7 of every 7-day block are weekend.
+  function isWeekendDay(dayNum) { var pos = ((dayNum - 1) % 7 + 7) % 7; return pos === 5 || pos === 6; }
+  function isHolidayDay(dayNum) { return state.holidays.indexOf(dayNum) !== -1; }
+  function isWorkingDay(dayNum) { return !isWeekendDay(dayNum) && !isHolidayDay(dayNum); }
+  function workingDaysBetween(start, end) {
+    var count = 0;
+    for (var d = start; d <= end; d++) { if (isWorkingDay(d)) count++; }
+    return count;
+  }
+  // find the end day so that exactly workDays working days fall within [start, end]
+  function endDayForWorkingDays(start, workDays) {
+    if (workDays <= 1) {
+      var d0 = start, guard0 = 0;
+      while (!isWorkingDay(d0) && guard0 < 3000) { d0++; guard0++; }
+      return workDays <= 0 ? start : d0;
+    }
+    var count = 0, d = start, guard = 0;
+    while (guard < 5000) {
+      if (isWorkingDay(d)) { count++; if (count >= workDays) return d; }
+      d++; guard++;
+    }
+    return d;
+  }
+  function initials(name) {
+    var parts = (name || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+  function contrastColor(hex) { return "#FFFFFF"; }
+
+  function defaultGroups() { return [{ id: uid(), label: "Этап 1", color: SWATCHES[0] }]; }
+
+  function computeProjectStats() {
+    var total = state.tasks.length;
+    var maxEnd = 0;
+    var progressSum = 0;
+    state.tasks.forEach(function (t) {
+      var e = toDayNum(t.end || t.start || 1);
+      if (e > maxEnd) maxEnd = e;
+      progressSum += t.progress || 0;
+    });
+    return {
+      taskCount: total,
+      avgProgress: total ? Math.round(progressSum / total) : 0,
+      maxEnd: maxEnd
+    };
+  }
+
+  function showBanner(text) { document.getElementById("banner").style.display = "block"; document.getElementById("bannerText").textContent = text; }
+  function hideBanner() { document.getElementById("banner").style.display = "none"; }
+  function showToast(text, ms) {
+    showBanner(text);
+    setTimeout(function () {
+      var el = document.getElementById("bannerText");
+      if (el && el.textContent === text) hideBanner();
+    }, ms || 3200);
+  }
+  // Native confirm()/prompt() are unreliable inside the artifact sandbox (they can resolve
+  // instantly as cancelled without ever showing), so destructive/input actions use these instead.
+  function showConfirm(message, onYes) {
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayConfirm"><div class="modal" style="max-width:360px;">' +
+        '<h2 style="margin-bottom:10px;">Подтверждение</h2>' +
+        '<p style="margin:0 0 18px;font-size:13.5px;color:var(--ink-soft);">' + escapeHtml(message) + "</p>" +
+        '<div class="modal-actions"><span></span><div class="right-actions">' +
+          '<button class="btn-ghost" id="btnConfirmNo">Отмена</button>' +
+          '<button class="btn btn-primary" id="btnConfirmYes" style="background:var(--danger);border-color:var(--danger);">Удалить</button>' +
+        "</div></div>" +
+      "</div></div>";
+    document.getElementById("overlayConfirm").addEventListener("mousedown", function (e) { if (e.target.id === "overlayConfirm") closeModal(); });
+    document.getElementById("btnConfirmNo").addEventListener("click", closeModal);
+    document.getElementById("btnConfirmYes").addEventListener("click", function () { closeModal(); onYes(); });
+  }
+  function showPrompt(title, placeholder, onSubmit) {
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayPrompt"><div class="modal" style="max-width:360px;">' +
+        '<h2 style="margin-bottom:14px;">' + escapeHtml(title) + "</h2>" +
+        '<div class="field"><input type="text" id="promptInput" placeholder="' + escapeHtml(placeholder || "") + '"></div>' +
+        '<div class="modal-actions"><span></span><div class="right-actions">' +
+          '<button class="btn-ghost" id="btnPromptCancel">Отмена</button>' +
+          '<button class="btn btn-primary" id="btnPromptOk">Добавить</button>' +
+        "</div></div>" +
+      "</div></div>";
+    var input = document.getElementById("promptInput");
+    setTimeout(function () { input.focus(); }, 0);
+    function submit() {
+      var v = input.value.trim();
+      if (!v) { input.focus(); return; }
+      closeModal();
+      onSubmit(v);
+    }
+    document.getElementById("overlayPrompt").addEventListener("mousedown", function (e) { if (e.target.id === "overlayPrompt") closeModal(); });
+    document.getElementById("btnPromptCancel").addEventListener("click", closeModal);
+    document.getElementById("btnPromptOk").addEventListener("click", submit);
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
+  }
+
+  function showNewProjectModal(onSubmit) {
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayNewProj"><div class="modal" style="max-width:400px;">' +
+        '<h2 style="margin-bottom:14px;">Новый проект</h2>' +
+        '<div class="field"><label>Название</label><input type="text" id="npName" placeholder="Например, Запуск нового ЖК"></div>' +
+        '<div class="field"><label>Тема (для поиска и фильтра)</label><input type="text" id="npTopic" placeholder="Например, Девелопмент" list="npTopicList"><datalist id="npTopicList">' +
+          (function () {
+            var seen = [];
+            state.projects.forEach(function (p) { if (p.topic && seen.indexOf(p.topic) === -1) seen.push(p.topic); });
+            return seen.map(function (t) { return '<option value="' + escapeHtml(t) + '">'; }).join("");
+          })() +
+        '</datalist></div>' +
+        '<div class="modal-actions"><span></span><div class="right-actions">' +
+          '<button class="btn-ghost" id="npCancel">Отмена</button>' +
+          '<button class="btn btn-primary" id="npOk">Создать</button>' +
+        '</div></div>' +
+      '</div></div>';
+    var nameInput = document.getElementById("npName");
+    setTimeout(function () { nameInput.focus(); }, 0);
+    function submit() {
+      var name = nameInput.value.trim();
+      if (!name) { nameInput.focus(); return; }
+      var topic = document.getElementById("npTopic").value.trim();
+      closeModal();
+      onSubmit(name, topic);
+    }
+    document.getElementById("overlayNewProj").addEventListener("mousedown", function (e) { if (e.target.id === "overlayNewProj") closeModal(); });
+    document.getElementById("npCancel").addEventListener("click", closeModal);
+    document.getElementById("npOk").addEventListener("click", submit);
+    nameInput.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
+  }
+
+  // ---------- library & navigation ----------
+  function renderCurrentView() {
+    document.getElementById("viewLibrary").classList.toggle("hidden", state.view !== "library");
+    document.getElementById("viewProject").classList.toggle("hidden", state.view !== "project");
+    if (state.view === "library") renderLibrary(); else renderAll();
+  }
+
+  function renderLibTopicOptions() {
+    var sel = document.getElementById("libTopic");
+    var cur = sel.value || state.libTopic || "all";
+    var topics = [];
+    state.projects.forEach(function (p) { var t = p.topic || "Без темы"; if (topics.indexOf(t) === -1) topics.push(t); });
+    topics.sort();
+    sel.innerHTML = '<option value="all">Все темы</option>' + topics.map(function (t) {
+      return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + "</option>";
+    }).join("");
+    sel.value = (cur === "all" || topics.indexOf(cur) !== -1) ? cur : "all";
+    state.libTopic = sel.value;
+  }
+
+  function renderLibrary() {
+    renderLibTopicOptions();
+    var q = state.libSearch.trim().toLowerCase();
+    var list = state.projects.filter(function (p) {
+      var topic = p.topic || "Без темы";
+      if (state.libTopic !== "all" && topic !== state.libTopic) return false;
+      if (q) {
+        var hay = ((p.name || "") + " " + (p.description || "") + " " + (p.topic || "")).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    }).sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
+
+    var grid = document.getElementById("libGrid");
+    document.getElementById("libEmpty").textContent = state.catalogLoaded ? "Ничего не нашлось — попробуйте другой запрос или тему." : "Загружаем библиотеку…";
+    document.getElementById("libEmpty").style.display = list.length ? "none" : "block";
+    grid.innerHTML = list.map(function (p) {
+      var pct = Math.max(0, Math.min(100, p.avgProgress || 0));
+      var dur = p.maxEnd || 0;
+      return '<button class="libCard" data-id="' + p.id + '">' +
+        (p.topic ? '<span class="libCard-topic">' + escapeHtml(p.topic) + "</span>" : "") +
+        "<h2>" + escapeHtml(p.name || "Без названия") + "</h2>" +
+        "<p>" + escapeHtml(p.description || "") + "</p>" +
+        '<div class="libCard-bar"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="libCard-foot"><span>' + (p.taskCount || 0) + " задач · " + pct + "%</span><span>" + (dur ? dur + " дн" : "") + "</span></div>" +
+        "</button>";
+    }).join("");
+    Array.prototype.forEach.call(grid.querySelectorAll(".libCard"), function (btn) {
+      btn.addEventListener("click", function () { openProject(btn.getAttribute("data-id")); });
+    });
+  }
+
+  function openProject(id) {
+    state.projectId = id;
+    state._projectLoaded = false;
+    state._sharedFp = null;
+    state.groups = []; state.team = []; state.tasks = []; state.holidays = [];
+    state.view = "project";
+    location.hash = "p=" + id;
+    state.search = ""; state.assigneeFilter = "all"; state.hideDone = false; state.editingTask = null;
+    lastProjectRaw = null;
+    renderCurrentView();
+    loadProject(true);
+    startProjectPolling();
+  }
+
+  function backToLibrary() {
+    stopProjectPolling();
+    state.view = "library";
+    state.projectId = null;
+    location.hash = "";
+    renderCurrentView();
+    loadCatalog(false);
+  }
+
+  function createProject(name, topic) {
+    var id = uid();
+    var entry = { id: id, name: name, description: "", topic: topic || "", color: SWATCHES[state.projects.length % SWATCHES.length], createdAt: Date.now(), taskCount: 0, avgProgress: 0, maxEnd: 0 };
+    state.projects.push(entry);
+    remoteWrite("index", { upsert: entry }).catch(function (e) { writeFail(e, "Не удалось создать проект."); });
+    openProject(id);
+  }
+
+  function setIfNotEditing(id, value) {
+    var el = document.getElementById(id);
+    if (!el || document.activeElement === el) return;
+    if (el.value !== value) el.value = value;
+  }
+
+  function saveProjectMeta() {
+    if (!state.projectId) return;
+    var patch = {
+      id: state.projectId,
+      name: document.getElementById("projectTitle").value.trim() || "Без названия",
+      description: document.getElementById("projectDesc").value.trim(),
+      topic: document.getElementById("projectTopic").value.trim()
+    };
+    var cur = state.projects.find(function (p) { return p.id === state.projectId; });
+    if (cur) Object.assign(cur, patch); else state.projects.push(Object.assign({ color: SWATCHES[0], createdAt: Date.now() }, patch));
+    remoteWrite("index", { upsert: patch }).catch(function (e) { writeFail(e, "Не удалось сохранить изменения проекта."); });
+  }
+  ["projectTitle", "projectDesc", "projectTopic"].forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener("change", saveProjectMeta);
+    el.addEventListener("keydown", function (e) { if (e.key === "Enter") el.blur(); });
+  });
+
+  document.getElementById("btnNewProject").addEventListener("click", function () {
+    showNewProjectModal(function (name, topic) { createProject(name, topic); });
+  });
+  document.getElementById("btnBackToLibrary").addEventListener("click", backToLibrary);
+  document.getElementById("libSearch").addEventListener("input", function (e) { state.libSearch = e.target.value; renderLibrary(); });
+  document.getElementById("libTopic").addEventListener("change", function (e) { state.libTopic = e.target.value; renderLibrary(); });
+
+// ---------- storage: bucket through the cloud function ----------
+  var FUNCTION_URL = "https://functions.yandexcloud.net/d4ega35alhn28oab98di";
+  var PW_KEY = "gantt_team_password_v1";
+  var POLL_CATALOG_MS = 20000, POLL_PROJECT_MS = 8000;
+  var pending = 0, writeEpoch = 0, lastCatalogRaw = null, lastProjectRaw = null;
+  var catalogTimer = null, projectTimer = null, statsTimer = null, pwPromise = null;
+
+  function getPassword() { try { return localStorage.getItem(PW_KEY) || ""; } catch (e) { return ""; } }
+  function setPassword(v) { try { localStorage.setItem(PW_KEY, v); } catch (e) {} }
+  function clearPassword() { try { localStorage.removeItem(PW_KEY); } catch (e) {} }
+
+  // one request to ?data=<name>; GET returns {data, raw}, errors carry .code = "auth" | "net"
+  function api(name, method, body) {
+    var opts = { method: method, headers: { "X-Edit-Key": getPassword() }, cache: "no-store" };
+    if (body != null) { opts.body = JSON.stringify(body); opts.headers["Content-Type"] = "application/json"; }
+    return fetch(FUNCTION_URL + "?data=" + encodeURIComponent(name), opts).then(function (r) {
+      return r.text().then(function (txt) {
+        var data = null; try { data = JSON.parse(txt); } catch (e) {}
+        if (r.status === 403) { var ea = new Error("auth"); ea.code = "auth"; throw ea; }
+        if (!r.ok) { var eh = new Error("Сервер вернул ошибку " + r.status + (data && data.error ? ": " + data.error : ".")); eh.code = "http"; throw eh; }
+        return { data: data, raw: txt };
+      });
+    }, function () {
+      var en = new Error("Нет связи с сервером. Проверьте интернет и обновите страницу."); en.code = "net"; throw en;
+    });
+  }
+  // same, but asks for the team password when it is missing or wrong, then retries
+  function apiAuth(name, method, body) {
+    if (!getPassword()) return askPassword("").then(function () { return apiAuth(name, method, body); });
+    return api(name, method, body).catch(function (e) {
+      if (e && e.code === "auth") {
+        clearPassword();
+        return askPassword("Неверный пароль. Попробуйте ещё раз.").then(function () { return apiAuth(name, method, body); });
+      }
+      throw e;
+    });
+  }
+  function askPassword(errText) {
+    if (pwPromise) return pwPromise;
+    pwPromise = new Promise(function (resolve) {
+      var root = document.getElementById("authRoot");
+      root.innerHTML =
+        '<div class="overlay" style="z-index:900;background:rgba(10,14,18,.7);"><form class="modal" id="authForm" style="max-width:360px;">' +
+          '<h2 style="margin-bottom:6px;">Дорожные карты</h2>' +
+          '<p style="margin:0 0 14px;font-size:13px;color:var(--ink-soft);line-height:1.5;">Введите пароль отдела маркетинга. Он запоминается в этом браузере.</p>' +
+          '<div class="field"><label for="authPw">Пароль</label><input type="password" id="authPw" autocomplete="current-password" style="width:100%;background:var(--panel-alt);border:1px solid var(--border);border-radius:6px;padding:9px 10px;font-size:14px;color:var(--ink);"></div>' +
+          '<p class="shareErr" id="authErr" style="' + (errText ? "" : "display:none;") + '">' + escapeHtml(errText || "") + '</p>' +
+          '<div class="modal-actions"><span></span><div class="right-actions"><button class="btn btn-primary" type="submit">Войти</button></div></div>' +
+        "</form></div>";
+      var pw = document.getElementById("authPw");
+      setTimeout(function () { pw.focus(); }, 0);
+      document.getElementById("authForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var v = pw.value.trim();
+        if (!v) { pw.focus(); return; }
+        setPassword(v);
+        root.innerHTML = "";
+        pwPromise = null;
+        resolve();
+      });
+    });
+    return pwPromise;
+  }
+
+  function writeFail(err, fallback) {
+    showToast((err && err.code === "net" ? err.message : (err && err.message) || fallback) || fallback, 6000);
+  }
+  // a write that blocks background refreshes while it is in flight
+  function remoteWrite(name, patch) {
+    pending++; writeEpoch++;
+    return apiAuth(name, "POST", patch).then(function (res) {
+      pending--; writeEpoch++; lastProjectRaw = null; lastCatalogRaw = null; return res;
+    }, function (e) { pending--; writeEpoch++; throw e; });
+  }
+  function isInteracting() {
+    var c = document.body.classList;
+    return c.contains("dragging-bar") || c.contains("linking-deps") || c.contains("resizing-cols");
+  }
+
+  function initStorage() {
+    loadCatalog(true).then(function () { if (state.projectId) { loadProject(true); startProjectPolling(); } });
+    clearInterval(catalogTimer);
+    catalogTimer = setInterval(function () { if (!document.hidden) loadCatalog(false); }, POLL_CATALOG_MS);
+  }
+
+  // ----- library (catalog of all roadmaps) -----
+  function loadCatalog(initial) {
+    var epoch = writeEpoch;
+    return apiAuth("index", "GET").then(function (res) {
+      state.catalogLoaded = true;
+      hideBanner();
+      if (epoch !== writeEpoch || pending > 0) return;
+      if (res.raw === lastCatalogRaw && !initial) return;
+      lastCatalogRaw = res.raw;
+      state.projects = (res.data && res.data.projects) || [];
+      renderCurrentView();
+    }).catch(function (e) { if (initial) { state.catalogLoaded = true; showBanner((e && e.message) || "Не удалось загрузить библиотеку."); renderCurrentView(); } });
+  }
+
+  // ----- one project -----
+  function startProjectPolling() {
+    clearInterval(projectTimer);
+    projectTimer = setInterval(function () { if (!document.hidden && state.projectId) loadProject(false); }, POLL_PROJECT_MS);
+  }
+  function stopProjectPolling() { clearInterval(projectTimer); projectTimer = null; }
+
+  function loadProject(initial) {
+    var id = state.projectId;
+    if (!id) return Promise.resolve();
+    var epoch = writeEpoch;
+    return apiAuth("p-" + id, "GET").then(function (res) {
+      if (id !== state.projectId) return;
+      if (epoch !== writeEpoch || pending > 0 || isInteracting()) return;
+      if (res.raw === lastProjectRaw && !initial) return;
+      lastProjectRaw = res.raw;
+      var d = res.data || {};
+      var fresh = !Array.isArray(d.groups) || d.groups.length === 0;
+      state.groups = fresh ? defaultGroups() : cloneList(d.groups);
+      state.team = cloneList(d.team);
+      state.tasks = cloneList(d.tasks);
+      state.holidays = (d.holidays || []).slice();
+      state._projectLoaded = true;
+      hideBanner();
+      if (fresh) writeBoard(); else renderAll();
+    }).catch(function (e) { if (initial) showBanner((e && e.message) || "Не удалось загрузить карту."); });
+  }
+
+  function cloneList(arr) { return (arr || []).map(function (x) { return Object.assign({}, x); }); }
+
+  // keep the library card (task count / progress / duration) in step with the project
+  function scheduleStats() {
+    clearTimeout(statsTimer);
+    statsTimer = setTimeout(function () {
+      if (!state.projectId) return;
+      var patch = Object.assign({ id: state.projectId }, computeProjectStats());
+      var cur = state.projects.find(function (p) { return p.id === state.projectId; });
+      if (cur) Object.assign(cur, patch);
+      remoteWrite("index", { upsert: patch }).catch(function () {});
+    }, 1500);
+  }
+
+  function writeBoard() {
+    var pid = state.projectId;
+    renderAll();
+    remoteWrite("p-" + pid, { board: { groups: state.groups, team: state.team, holidays: state.holidays } })
+      .catch(function (e) { writeFail(e, "Не удалось сохранить изменения."); });
+  }
+
+  // task writes are collected for a moment and sent as one request
+  var taskQueue = {}, taskQueueCount = 0, taskFlushTimer = null, taskQueuePid = null;
+  function writeTask(task) {
+    var body = {
+      id: task.id, title: task.title, groupId: task.groupId, assigneeIds: assigneeIdsOf(task),
+      start: task.start, end: task.end, progress: task.progress || 0, milestone: !!task.milestone,
+      color: task.color, dependencies: Array.isArray(task.dependencies) ? task.dependencies : [],
+      createdAt: task.createdAt, updatedAt: Date.now()
+    };
+    var idx = state.tasks.findIndex(function (t) { return t.id === task.id; });
+    if (idx >= 0) state.tasks[idx] = task; else state.tasks.push(task);
+    if (taskQueueCount === 0) { pending++; writeEpoch++; taskQueuePid = state.projectId; }
+    if (!taskQueue[task.id]) taskQueueCount++;
+    taskQueue[task.id] = body;
+    clearTimeout(taskFlushTimer);
+    taskFlushTimer = setTimeout(flushTasks, 40);
+    renderAll();
+  }
+  function flushTasks() {
+    var items = Object.keys(taskQueue).map(function (k) { return taskQueue[k]; });
+    var pid = taskQueuePid;
+    taskQueue = {}; taskQueueCount = 0;
+    if (!items.length) return;
+    apiAuth("p-" + pid, "POST", { tasks: { upsert: items } }).then(function () {
+      pending--; writeEpoch++; lastProjectRaw = null; scheduleStats();
+    }, function (e) { pending--; writeEpoch++; writeFail(e, "Не удалось сохранить задачу."); });
+  }
+  function deleteTask(id) {
+    var pid = state.projectId;
+    state.tasks = state.tasks.filter(function (t) { return t.id !== id; });
+    state.tasks.forEach(function (t) { if (Array.isArray(t.dependencies)) t.dependencies = t.dependencies.filter(function (d) { return d !== id; }); });
+    renderAll();
+    remoteWrite("p-" + pid, { tasks: { delete: [id] } }).then(scheduleStats)
+      .catch(function (e) { writeFail(e, "Не удалось удалить задачу."); });
+  }
+
+  function deleteProject(id) {
+    var meta = state.projects.find(function (p) { return p.id === id; });
+    var tok = meta && meta.shareToken;
+    var steps = Promise.resolve();
+    if (tok) steps = steps.then(function () { return shareRequest("DELETE", tok, null); }).catch(function () {});
+    steps.then(function () { return remoteWrite("p-" + id, { deleteProject: true }); })
+      .then(function () { return remoteWrite("index", { delete: id }); })
+      .then(function () {
+        state.projects = state.projects.filter(function (p) { return p.id !== id; });
+        backToLibrary();
+        showToast("Карта удалена.");
+      }).catch(function (e) { writeFail(e, "Не удалось удалить карту."); });
+  }
+
+  // one-time import of roadmaps exported from the previous (claude.ai) version
+  function importRoadmaps(obj) {
+    var list = obj && Array.isArray(obj.projects) ? obj.projects : [];
+    if (!list.length) { showToast("В файле нет карт для импорта."); return; }
+    var chain = Promise.resolve(), n = 0;
+    list.forEach(function (p) {
+      if (!p || !p.id) return;
+      chain = chain.then(function () {
+        return remoteWrite("p-" + p.id, { replace: { groups: p.groups || [], team: p.team || [], holidays: p.holidays || [], tasks: p.tasks || [] } });
+      }).then(function () {
+        var meta = { id: p.id, name: p.name || "Без названия", description: p.description || "", topic: p.topic || "", color: p.color || SWATCHES[0], createdAt: p.createdAt || Date.now() };
+        var t = p.tasks || [], maxEnd = 0, sum = 0;
+        t.forEach(function (x) { var e = toDayNum(x.end || x.start || 1); if (e > maxEnd) maxEnd = e; sum += x.progress || 0; });
+        meta.taskCount = t.length; meta.avgProgress = t.length ? Math.round(sum / t.length) : 0; meta.maxEnd = maxEnd;
+        return remoteWrite("index", { upsert: meta });
+      }).then(function () { n++; });
+    });
+    chain.then(function () { showToast("Импортировано карт: " + n + "."); return loadCatalog(true); })
+      .catch(function (e) { writeFail(e, "Импорт не удался."); });
+  }
+
+  // ---------- layout computation ----------
+  function computeRange() {
+    var maxEnd = 14;
+    state.tasks.forEach(function (t) {
+      var e = toDayNum(t.end || t.start || 1);
+      if (e > maxEnd) maxEnd = e;
+    });
+    var end = maxEnd + 6;
+    return { start: 1, end: end, totalDays: end };
+  }
+
+  function visibleTasks() {
+    var q = state.search.trim().toLowerCase();
+    return state.tasks.filter(function (t) {
+      if (q && t.title.toLowerCase().indexOf(q) === -1) return false;
+      if (state.assigneeFilter !== "all" && assigneeIdsOf(t).indexOf(state.assigneeFilter) === -1) return false;
+      if (state.hideDone && (t.progress || 0) >= 100) return false;
+      return true;
+    });
+  }
+
+  function buildRows() {
+    var tasks = visibleTasks();
+    var rows = [];
+    var y = 0;
+    state.groups.forEach(function (g) {
+      rows.push({ type: "group", group: g, top: y, height: GH });
+      y += GH;
+      var gt = tasks.filter(function (t) { return t.groupId === g.id; })
+        .sort(function (a, b) { return toDayNum(a.start) - toDayNum(b.start); });
+      gt.forEach(function (t) {
+        rows.push({ type: "task", task: t, top: y, height: RH });
+        y += RH;
+      });
+    });
+    return { rows: rows, totalHeight: y };
+  }
+
+  function teamById(id) { return state.team.find(function (m) { return m.id === id; }); }
+  function groupById(id) { return state.groups.find(function (g) { return g.id === id; }); }
+  function taskById(id) { return state.tasks.find(function (t) { return t.id === id; }); }
+  function depIdsOf(t) { return Array.isArray(t.dependencies) ? t.dependencies.filter(Boolean) : []; }
+  // does a path of dependencies lead from fromId to toId in the CURRENT stored graph?
+  function hasPathTo(fromId, toId, visited) {
+    if (fromId === toId) return true;
+    visited = visited || {};
+    if (visited[fromId]) return false;
+    visited[fromId] = true;
+    var t = taskById(fromId);
+    if (!t) return false;
+    var deps = depIdsOf(t);
+    for (var i = 0; i < deps.length; i++) { if (hasPathTo(deps[i], toId, visited)) return true; }
+    return false;
+  }
+  // earliest day a task is allowed to start, given the finish dates of its predecessors (Finish-to-Start)
+  function taskMinAllowedStart(t) {
+    var deps = depIdsOf(t).map(taskById).filter(Boolean);
+    if (!deps.length) return 1;
+    var maxEnd = 0;
+    deps.forEach(function (d) { var e = toDayNum(d.end || d.start); if (e > maxEnd) maxEnd = e; });
+    return maxEnd + 1;
+  }
+  // full-graph relaxation: push any task whose start now violates a predecessor's finish date forward,
+  // preserving its own duration, and keep propagating until the whole graph is consistent again.
+  // Bounded by task count since the dependency graph is guaranteed acyclic.
+  function cascadeReschedule() {
+    var changedIds = [];
+    var maxPasses = state.tasks.length + 5;
+    for (var pass = 0; pass < maxPasses; pass++) {
+      var anyChange = false;
+      state.tasks.forEach(function (t) {
+        if (depIdsOf(t).length === 0) return;
+        var minStart = taskMinAllowedStart(t);
+        var curStart = toDayNum(t.start);
+        if (curStart !== minStart) {
+          var dur = toDayNum(t.end || t.start) - curStart;
+          t.start = minStart;
+          t.end = t.milestone ? minStart : minStart + dur;
+          if (changedIds.indexOf(t.id) === -1) changedIds.push(t.id);
+          anyChange = true;
+        }
+      });
+      if (!anyChange) break;
+    }
+    return changedIds;
+  }
+  // apply a task's own edit, then let dependent tasks cascade forward if needed, persisting everything
+  function commitTaskChange(task) {
+    if (depIdsOf(task).length > 0) {
+      var minStart = taskMinAllowedStart(task);
+      var curStart = toDayNum(task.start);
+      if (curStart !== minStart) {
+        var dur = toDayNum(task.end || task.start) - curStart;
+        task.start = minStart;
+        task.end = task.milestone ? minStart : minStart + dur;
+      }
+    }
+    // keep state.tasks in sync immediately (writeTask's cloud path only updates it asynchronously
+    // once the snapshot echoes back, but cascadeReschedule below needs the fresh values right now)
+    var idx = state.tasks.findIndex(function (x) { return x.id === task.id; });
+    if (idx >= 0) state.tasks[idx] = task; else state.tasks.push(task);
+    writeTask(task);
+    var changed = cascadeReschedule();
+    changed.forEach(function (id) {
+      if (id === task.id) return;
+      var t = taskById(id);
+      if (t) writeTask(t);
+    });
+    renderAll();
+  }
+  function assigneeIdsOf(t) {
+    if (Array.isArray(t.assigneeIds)) return t.assigneeIds.filter(Boolean);
+    if (t.assigneeId) return [t.assigneeId];
+    return [];
+  }
+  function whoHtmlFor(t) {
+    var members = assigneeIdsOf(t).map(teamById).filter(Boolean);
+    if (!members.length) return '<span class="avatar" style="background:var(--ink-faint)">?</span><span class="who-name">—</span>';
+    var avatars = members.slice(0, 3).map(function (m, i) {
+      return '<span class="avatar" style="background:' + m.color + ';margin-left:' + (i > 0 ? "-7px" : "0") + ";z-index:" + (5 - i) + ';border:2px solid var(--panel);">' + initials(m.name) + "</span>";
+    }).join("");
+    var extra = members.length > 3 ? '<span class="avatar" style="background:var(--ink-faint);margin-left:-7px;border:2px solid var(--panel);">+' + (members.length - 3) + "</span>" : "";
+    var namesText = members.map(function (m) { return m.name; }).join(", ");
+    return avatars + extra + '<span class="who-name">' + escapeHtml(namesText) + "</span>";
+  }
+
+  // ---------- rendering: header / stats / filters ----------
+  function renderStatInline() {
+    var total = state.tasks.length;
+    var maxEnd = 0;
+    state.tasks.forEach(function (t) { var e = toDayNum(t.end || t.start || 1); if (e > maxEnd) maxEnd = e; });
+    var avg = total ? Math.round(state.tasks.reduce(function (s, t) { return s + (t.progress || 0); }, 0) / total) : 0;
+    document.getElementById("statInline").innerHTML =
+      "<span>Задач: <b>" + total + "</b></span><span>Длительность: <b>" + maxEnd + " дн</b></span><span>Прогресс: <b>" + avg + "%</b></span>";
+  }
+
+  function renderAssigneeFilterOptions() {
+    var sel = document.getElementById("fAssignee");
+    var current = sel.value || "all";
+    sel.innerHTML = '<option value="all">Все исполнители</option>' + state.team.map(function (m) {
+      return '<option value="' + m.id + '">' + escapeHtml(m.name) + "</option>";
+    }).join("");
+    sel.value = state.team.some(function (m) { return m.id === current; }) ? current : "all";
+    state.assigneeFilter = sel.value;
+  }
+
+  // ---------- main render ----------
+  function renderAll() {
+    var proj = state.projects.find(function (p) { return p.id === state.projectId; });
+    setIfNotEditing("projectTitle", proj ? (proj.name || "") : "");
+    setIfNotEditing("projectDesc", proj ? (proj.description || "") : "");
+    setIfNotEditing("projectTopic", proj ? (proj.topic || "") : "");
+    renderStatInline();
+    renderAssigneeFilterOptions();
+    var layout = buildRows();
+    var dayWidth = ZOOM_WIDTH[state.zoom];
+    var range = computeRange();
+    state._dayWidth = dayWidth;
+    state._rangeStart = range.start;
+    var timelineWidth = range.totalDays * dayWidth;
+    renderHeader("timelineHeadInner", range, dayWidth, timelineWidth, layout.totalHeight);
+    document.getElementById("timelineBodyInner").style.width = timelineWidth + "px";
+    document.getElementById("timelineBodyInner").style.height = layout.totalHeight + "px";
+    renderGrid("gridLayer", range, dayWidth, timelineWidth, layout.totalHeight);
+    renderSidebarRows("sidebarRows", layout, false);
+    renderTimelineRows("rowsLayer", layout, range, dayWidth, false);
+    renderDeps("depsLayer", layout, range, dayWidth, timelineWidth, true);
+    maybeSyncShare();
+  }
+
+  function renderHeader(containerId, range, dayWidth, timelineWidth, bodyHeight) {
+    var el = document.getElementById(containerId);
+    el.style.width = timelineWidth + "px";
+    var html = "";
+    // week-of-project bands (every 7 project days) — not tied to a real calendar
+    var x = 0, dayIdx = 0, weekNum = 1;
+    while (dayIdx < range.totalDays) {
+      var span = Math.min(7, range.totalDays - dayIdx);
+      var w = span * dayWidth;
+      html += '<div class="monthBand" style="left:' + x + 'px;width:' + w + 'px;">Неделя ' + weekNum + "</div>";
+      x += w; dayIdx += span; weekNum++;
+    }
+    // day cells — plain project day numbers; non-working days (virtual weekend/holiday) are tinted
+    for (var i = 0; i < range.totalDays; i++) {
+      var dayNum = range.start + i;
+      var left = i * dayWidth;
+      var cls = "dayCell" + (!isWorkingDay(dayNum) ? " weekend" : "");
+      html += '<div class="' + cls + '" style="left:' + left + 'px;width:' + dayWidth + 'px;">' + (dayWidth >= 15 ? dayNum : "") + "</div>";
+    }
+    el.innerHTML = html;
+  }
+
+  function renderGrid(containerId, range, dayWidth, timelineWidth, bodyHeight) {
+    var el = document.getElementById(containerId);
+    el.style.width = timelineWidth + "px";
+    el.style.height = bodyHeight + "px";
+    var html = "";
+    for (var i = 0; i < range.totalDays; i++) {
+      var dayNum = range.start + i;
+      if (!isWorkingDay(dayNum)) {
+        html += '<div class="weekendRect' + (isHolidayDay(dayNum) ? " holiday" : "") + '" style="left:' + (i * dayWidth) + 'px;width:' + dayWidth + 'px;height:' + bodyHeight + 'px;"></div>';
+      }
+    }
+    for (var j = 0; j < range.totalDays; j += 7) {
+      html += '<div class="monthLine" style="left:' + (j * dayWidth) + 'px;height:' + bodyHeight + 'px;"></div>';
+    }
+    el.innerHTML = html;
+  }
+
+  function renderSidebarRows(containerId, layout, printMode) {
+    var el = document.getElementById(containerId);
+    el.style.height = layout.totalHeight + "px";
+    var html = layout.rows.map(function (row) {
+      if (row.type === "group") {
+        var g = row.group;
+        var idx = state.groups.findIndex(function (x) { return x.id === g.id; });
+        var gts = state.tasks.filter(function (t) { return t.groupId === g.id; });
+        var count = "";
+        if (gts.length) {
+          var gs = Math.min.apply(null, gts.map(function (t) { return toDayNum(t.start); }));
+          var ge = Math.max.apply(null, gts.map(function (t) { return toDayNum(t.end || t.start); }));
+          count = workingDaysBetween(gs, ge);
+        }
+        var actions = printMode ? "" :
+          '<div class="groupActions">' +
+          (idx > 0 ? '<button class="iconBtn" data-gmove="-1" data-gid="' + g.id + '" title="Выше">↑</button>' : "") +
+          (idx < state.groups.length - 1 ? '<button class="iconBtn" data-gmove="1" data-gid="' + g.id + '" title="Ниже">↓</button>' : "") +
+          '<button class="iconBtn" data-gdel="' + g.id + '" title="Удалить этап">✕</button>' +
+          "</div>";
+        return '<div class="groupSideRow" style="top:' + row.top + 'px;height:' + row.height + 'px;">' +
+          '<span class="groupDot" style="background:' + g.color + '"></span>' +
+          (printMode
+            ? '<span style="flex:1;font-size:12.5px;font-weight:600;">' + escapeHtml(g.label) + "</span>"
+            : '<input class="gTitle" data-gid="' + g.id + '" value="' + escapeHtml(g.label) + '">') +
+          '<span class="gCount" title="Длительность этапа, раб. дн.">' + count + "</span>" + actions +
+          "</div>";
+      } else {
+        var t = row.task;
+        var start = toDayNum(t.start), end = toDayNum(t.end || t.start);
+        var workDur = workingDaysBetween(start, end);
+        var whoHtml = whoHtmlFor(t);
+        return '<div class="sideRow" style="top:' + row.top + 'px;height:' + row.height + 'px;"' + (printMode ? "" : ' data-open="' + t.id + '"') + '>' +
+          '<div class="col-title" title="' + escapeHtml(t.title) + '">' +
+            '<span class="t-title">' + escapeHtml(t.title) + "</span>" +
+            '<span class="t-progress"><i style="width:' + (t.progress || 0) + "%;background:" + (t.color || "var(--accent)") + '"></i></span>' +
+          "</div>" +
+          '<div class="col-who who-chip">' + whoHtml + "</div>" +
+          '<div class="col-days t-days">' + (t.milestone ? "веха" : workDur) + "</div>" +
+          "</div>";
+      }
+    }).join("");
+    el.innerHTML = html;
+    if (!printMode) wireSidebarEvents();
+  }
+
+  function renderTimelineRows(containerId, layout, range, dayWidth, printMode) {
+    var el = document.getElementById(containerId);
+    el.style.height = layout.totalHeight + "px";
+    var html = layout.rows.map(function (row) {
+      if (row.type === "group") {
+        var band = '<div class="groupBand" style="top:' + row.top + 'px;height:' + row.height + 'px;background:' + row.group.color + '11;"></div>';
+        var gts = state.tasks.filter(function (t) { return t.groupId === row.group.id; });
+        if (!gts.length) return band;
+        var gs = Math.min.apply(null, gts.map(function (t) { return toDayNum(t.start); }));
+        var ge = Math.max.apply(null, gts.map(function (t) { return toDayNum(t.end || t.start); }));
+        var gAvg = Math.round(gts.reduce(function (sum, t) { return sum + (t.progress || 0); }, 0) / gts.length);
+        var gLeft = (gs - range.start) * dayWidth;
+        var gW = Math.max((ge - gs + 1) * dayWidth - 3, 6);
+        var gOut = true;
+        var gLabel = escapeHtml(row.group.label) + " · " + workingDaysBetween(gs, ge) + " дн";
+        var gh = 14;
+        return band +
+          '<div class="groupBar' + (gOut ? " outside-label" : "") + '" title="' + gLabel + '" style="left:' + gLeft + 'px;top:' + (row.top + (row.height - gh) / 2) + 'px;width:' + gW + 'px;height:' + gh + 'px;">' +
+            '<span class="gb-bg" style="background:' + row.group.color + '"></span>' +
+            '<span class="gb-fill" style="width:' + gAvg + '%;background:' + row.group.color + '"></span>' +
+            '<span class="gb-tick gb-l" style="border-top-color:' + row.group.color + '"></span><span class="gb-tick gb-r" style="border-top-color:' + row.group.color + '"></span>' +
+            '<span class="gb-label">' + gLabel + "</span>" +
+          "</div>";
+      }
+      var t = row.task;
+      var start = toDayNum(t.start), end = toDayNum(t.end || t.start);
+      var left = (start - range.start) * dayWidth;
+      var color = t.color || "var(--accent)";
+      if (t.milestone) {
+        var cx = left;
+        return '<div class="milestone"' + (printMode ? "" : ' data-open="' + t.id + '"') + ' style="left:' + cx + 'px;top:' + (row.top + row.height / 2 - 7) + 'px;background:' + color + ';"></div>' +
+          '<div class="milestoneLabel" style="left:' + (cx + 14) + 'px;top:' + (row.top + row.height / 2 - 8) + 'px;">' + escapeHtml(t.title) + "</div>";
+      }
+      var w = Math.max((end - start + 1) * dayWidth - 3, 6);
+      var outside = w < 46;
+      var pct = Math.max(0, Math.min(100, t.progress || 0));
+      var handles = printMode ? "" : '<span class="barHandle bh-l" title="Потяните — изменить начало"></span><span class="barHandle bh-r" title="Потяните — изменить конец"></span><span class="linkHandle" title="Потяните — создать связь ФС (Финиш-Старт) с другой задачей"></span>';
+      return '<div class="bar' + (outside ? " outside-label" : "") + '"' + (printMode ? "" : ' data-open="' + t.id + '"') + ' style="left:' + left + 'px;top:' + (row.top + 7) + "px;width:" + w + "px;height:" + (row.height - 14) + 'px;">' +
+        '<span class="fill-bg" style="background:' + color + '"></span>' +
+        '<span class="fill-progress" style="width:' + pct + "%;background:" + color + '"></span>' +
+        (outside ? '<span class="bar-label">' + escapeHtml(t.title) + "</span>" : '<span class="bar-label">' + escapeHtml(t.title) + "</span>") +
+        handles +
+        "</div>";
+    }).join("");
+    el.innerHTML = html;
+  }
+
+  function elbowPathD(x1, y1, x2, y2) {
+    var stub = 10;
+    if (x2 >= x1 + stub * 2) {
+      var midX = x1 + stub;
+      return "M " + x1 + " " + y1 + " H " + midX + " V " + y2 + " H " + (x2 - 1);
+    }
+    var out = x1 + stub, into = x2 - stub;
+    var midY = y1 <= y2 ? y1 + (y2 - y1) / 2 : y1 - (y1 - y2) / 2;
+    return "M " + x1 + " " + y1 + " H " + out + " V " + midY + " H " + into + " V " + y2 + " H " + (x2 - 1);
+  }
+
+  function renderDeps(containerId, layout, range, dayWidth, timelineWidth, interactive) {
+    var svg = document.getElementById(containerId);
+    svg.setAttribute("width", timelineWidth);
+    svg.setAttribute("height", layout.totalHeight);
+    var rowInfo = {};
+    layout.rows.forEach(function (row) {
+      if (row.type === "task") rowInfo[row.task.id] = row;
+    });
+    var paths = "";
+    layout.rows.forEach(function (row) {
+      if (row.type !== "task") return;
+      var t = row.task;
+      var deps = depIdsOf(t);
+      deps.forEach(function (depId) {
+        var predRow = rowInfo[depId];
+        if (!predRow) return;
+        var pred = predRow.task;
+        var predEnd = toDayNum(pred.end || pred.start);
+        var succStart = toDayNum(t.start);
+        var x1 = (predEnd - range.start + 1) * dayWidth;
+        var y1 = predRow.top + predRow.height / 2;
+        var x2 = (succStart - range.start) * dayWidth;
+        var y2 = row.top + row.height / 2;
+        var violated = succStart <= predEnd;
+        var d = elbowPathD(x1, y1, x2, y2);
+        if (interactive) {
+          var predTitle = pred ? pred.title : "";
+          paths += '<path class="depHit" d="' + d + '" data-pred="' + depId + '" data-succ="' + t.id + '"><title>ФС (Финиш-Старт) · клик — удалить связь: ' + escapeHtml(predTitle) + " → " + escapeHtml(t.title) + "</title></path>";
+        }
+        paths += '<path class="depPath' + (violated ? " warn" : "") + '" d="' + d + '" marker-end="url(#' + (violated ? "arrowWarn" : "arrowNormal") + ')"></path>';
+      });
+    });
+    var defs = svg.querySelector("defs");
+    svg.innerHTML = "";
+    if (defs) svg.appendChild(defs);
+    svg.insertAdjacentHTML("beforeend", paths);
+  }
+
+  // ---------- events ----------
+  function wireSidebarEvents() {
+    var root = document.getElementById("sidebarRows");
+    Array.prototype.forEach.call(root.querySelectorAll("[data-open]"), function (elm) {
+      elm.addEventListener("click", function () { openTaskModal(state.tasks.find(function (t) { return t.id === elm.getAttribute("data-open"); })); });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll(".gTitle"), function (inp) {
+      inp.addEventListener("change", function () {
+        var g = groupById(inp.getAttribute("data-gid"));
+        if (g) { g.label = inp.value.trim() || g.label; writeBoard(); }
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll("[data-gmove]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var gid = btn.getAttribute("data-gid"), dir = parseInt(btn.getAttribute("data-gmove"), 10);
+        var i = state.groups.findIndex(function (x) { return x.id === gid; });
+        var j = i + dir;
+        if (j < 0 || j >= state.groups.length) return;
+        var tmp = state.groups[i]; state.groups[i] = state.groups[j]; state.groups[j] = tmp;
+        writeBoard();
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll("[data-gdel]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var gid = btn.getAttribute("data-gdel");
+        if (state.tasks.some(function (t) { return t.groupId === gid; })) { showToast("Сначала перенесите или удалите задачи этого этапа."); return; }
+        if (state.groups.length <= 1) { showToast("Должен остаться хотя бы один этап."); return; }
+        var gname = (groupById(gid) || {}).label || "этап";
+        showConfirm("Удалить этап «" + gname + "»? Это действие нельзя отменить.", function () {
+          state.groups = state.groups.filter(function (x) { return x.id !== gid; });
+          writeBoard();
+        });
+      });
+    });
+  }
+
+  var suppressNextBarClick = false;
+  document.getElementById("rowsLayer").addEventListener("click", function (e) {
+    if (suppressNextBarClick) { suppressNextBarClick = false; return; }
+    var t = e.target.closest("[data-open]");
+    if (t) openTaskModal(state.tasks.find(function (x) { return x.id === t.getAttribute("data-open"); }));
+  });
+
+  var _rafPending = false;
+  function scheduleRender() {
+    if (_rafPending) return;
+    _rafPending = true;
+    requestAnimationFrame(function () { _rafPending = false; renderAll(); });
+  }
+
+  function startBarDrag(e, taskId, mode) {
+    if (e.button !== undefined && e.button !== 0) return;
+    var task = state.tasks.find(function (x) { return x.id === taskId; });
+    if (!task) return;
+    if ((mode === "start" || mode === "move") && depIdsOf(task).length > 0) {
+      showToast("Начало этой задачи задаётся предшественником (ФС) — сдвиньте его, чтобы изменить срок.");
+      return;
+    }
+    e.preventDefault();
+    var dayWidth = state._dayWidth || ZOOM_WIDTH[state.zoom];
+    var origStart = toDayNum(task.start), origEnd = toDayNum(task.end || task.start);
+    var startX = e.clientX;
+    var moved = false;
+
+    function apply(clientX) {
+      var dx = clientX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      var delta = Math.round(dx / dayWidth);
+      var ns = origStart, ne = origEnd;
+      if (mode === "start") {
+        ns = Math.max(1, Math.min(origEnd, origStart + delta));
+      } else if (mode === "end") {
+        ne = Math.max(origStart, origEnd + delta);
+      } else {
+        ns = Math.max(1, origStart + delta);
+        ne = ns + (origEnd - origStart);
+      }
+      task.start = ns;
+      task.end = task.milestone ? ns : ne;
+      scheduleRender();
+    }
+    function onMove(ev) { apply(ev.clientX); }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.body.classList.remove("dragging-bar");
+      if (moved) { suppressNextBarClick = true; commitTaskChange(task); }
+    }
+    document.body.classList.add("dragging-bar");
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  document.getElementById("rowsLayer").addEventListener("mousedown", function (e) {
+    var linkHandle = e.target.closest(".linkHandle");
+    if (linkHandle) {
+      var srcBar = linkHandle.closest(".bar[data-open]");
+      if (srcBar) startLinkDrag(e, srcBar.getAttribute("data-open"));
+      return;
+    }
+    var handle = e.target.closest(".barHandle");
+    if (handle) {
+      var bar = handle.closest(".bar");
+      if (bar) startBarDrag(e, bar.getAttribute("data-open"), handle.classList.contains("bh-l") ? "start" : "end");
+      return;
+    }
+    var moveEl = e.target.closest(".bar[data-open], .milestone[data-open]");
+    if (moveEl) startBarDrag(e, moveEl.getAttribute("data-open"), "move");
+  });
+
+  function startLinkDrag(e, sourceTaskId) {
+    if (e.button !== undefined && e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var svg = document.getElementById("depsLayer");
+    var timelineInner = document.getElementById("timelineBodyInner");
+    var sourceBarEl = e.target.closest(".bar[data-open]");
+    if (!sourceBarEl) return;
+
+    var ghost = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    ghost.setAttribute("class", "ghostLinkPath");
+    svg.appendChild(ghost);
+
+    var curTarget = null;
+
+    function point(clientX, clientY) {
+      var r = timelineInner.getBoundingClientRect();
+      return { x: clientX - r.left, y: clientY - r.top };
+    }
+    var barRect = sourceBarEl.getBoundingClientRect();
+    var start = point(barRect.right, barRect.top + barRect.height / 2);
+
+    function onMove(ev) {
+      var p = point(ev.clientX, ev.clientY);
+      ghost.setAttribute("d", elbowPathD(start.x, start.y, p.x, p.y));
+      var el = document.elementFromPoint(ev.clientX, ev.clientY);
+      var target = el && el.closest ? el.closest(".bar[data-open], .milestone[data-open]") : null;
+      if (target === sourceBarEl) target = null;
+      if (target !== curTarget) {
+        if (curTarget) curTarget.classList.remove("dropTargetHighlight");
+        if (target) target.classList.add("dropTargetHighlight");
+        curTarget = target;
+      }
+    }
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.body.classList.remove("linking-deps");
+      ghost.remove();
+      if (curTarget) {
+        curTarget.classList.remove("dropTargetHighlight");
+        createDependencyLink(sourceTaskId, curTarget.getAttribute("data-open"));
+      }
+    }
+    document.body.classList.add("linking-deps");
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  }
+
+  function createDependencyLink(predId, succId) {
+    if (!predId || !succId || predId === succId) return;
+    var succ = taskById(succId);
+    if (!succ) return;
+    if (hasPathTo(predId, succId)) {
+      showToast("Не удалось создать связь — это привело бы к циклической зависимости.");
+      return;
+    }
+    var deps = depIdsOf(succ);
+    if (deps.indexOf(predId) !== -1) return;
+    succ.dependencies = deps.concat([predId]);
+    commitTaskChange(succ);
+  }
+
+  function removeDependencyLink(predId, succId) {
+    var succ = taskById(succId);
+    if (!succ) return;
+    var pred = taskById(predId);
+    succ.dependencies = depIdsOf(succ).filter(function (id) { return id !== predId; });
+    var idx = state.tasks.findIndex(function (x) { return x.id === succ.id; });
+    if (idx >= 0) state.tasks[idx] = succ;
+    writeTask(succ);
+    renderAll();
+    showToast("Связь удалена: «" + (pred ? pred.title : predId) + "» → «" + succ.title + "»");
+  }
+
+  document.getElementById("depsLayer").addEventListener("click", function (e) {
+    var hit = e.target.closest(".depHit");
+    if (!hit) return;
+    removeDependencyLink(hit.getAttribute("data-pred"), hit.getAttribute("data-succ"));
+  });
+
+  document.getElementById("btnAddStage").addEventListener("click", function () {
+    showPrompt("Название нового этапа", "Например, Разработка", function (label) {
+      var color = SWATCHES[state.groups.length % SWATCHES.length];
+      state.groups.push({ id: uid(), label: label, color: color });
+      writeBoard();
+      renderAll();
+    });
+  });
+
+  document.getElementById("zoomSelect").addEventListener("change", function (e) { state.zoom = e.target.value; renderAll(); });
+  document.getElementById("fSearch").addEventListener("input", function (e) { state.search = e.target.value; renderAll(); });
+  document.getElementById("fAssignee").addEventListener("change", function (e) { state.assigneeFilter = e.target.value; renderAll(); });
+  document.getElementById("fHideDone").addEventListener("change", function (e) { state.hideDone = e.target.checked; renderAll(); });
+
+  document.getElementById("timelineBodyScroll").addEventListener("scroll", function (e) {
+    document.getElementById("timelineHeadScroll").scrollLeft = e.target.scrollLeft;
+  });
+
+  document.getElementById("btnAddTask").addEventListener("click", function () { openTaskModal(null); });
+
+  // ---------- task modal ----------
+  function nextFreeStart() {
+    var maxEnd = 0;
+    state.tasks.forEach(function (t) { var e = toDayNum(t.end || t.start || 1); if (e > maxEnd) maxEnd = e; });
+    return maxEnd + 1;
+  }
+  function openTaskModal(task) {
+    var s = nextFreeStart();
+    state.editingTask = task ? Object.assign({}, task) : {
+      id: uid(), title: "", groupId: state.groups[0] && state.groups[0].id,
+      assigneeIds: [], start: s, end: s + 4, dependencies: [],
+      progress: 0, milestone: false, color: SWATCHES[0], createdAt: Date.now()
+    };
+    renderTaskModal();
+  }
+  function closeModal() { state.editingTask = null; document.getElementById("modalRoot").innerHTML = ""; }
+
+  function renderTaskModal() {
+    var it = state.editingTask;
+    if (!it) { document.getElementById("modalRoot").innerHTML = ""; return; }
+    var isNew = !state.tasks.some(function (t) { return t.id === it.id; });
+
+    var groupOpts = state.groups.map(function (g) {
+      return '<option value="' + g.id + '"' + (g.id === it.groupId ? " selected" : "") + ">" + escapeHtml(g.label) + "</option>";
+    }).join("");
+    var curIds = assigneeIdsOf(it);
+    var teamChecklist = state.team.length === 0
+      ? '<p style="margin:0;font-size:12px;color:var(--ink-faint);">Пока никого нет в команде.</p>'
+      : state.team.map(function (m) {
+          return '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0;cursor:pointer;">' +
+            '<input type="checkbox" class="fAssigneeChk" value="' + m.id + '"' + (curIds.indexOf(m.id) !== -1 ? " checked" : "") + '>' +
+            '<span class="avatar" style="background:' + m.color + ';width:18px;height:18px;font-size:8.5px;">' + initials(m.name) + "</span>" +
+            escapeHtml(m.name) +
+          "</label>";
+        }).join("");
+    var curDeps = depIdsOf(it);
+    var otherTasks = state.tasks.filter(function (t) { return t.id !== it.id; })
+      .sort(function (a, b) { return toDayNum(a.start) - toDayNum(b.start); });
+    var depsChecklist = otherTasks.length === 0
+      ? '<p style="margin:0;font-size:12px;color:var(--ink-faint);">Пока нет других задач.</p>'
+      : otherTasks.map(function (t) {
+          return '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0;cursor:pointer;">' +
+            '<input type="checkbox" class="fDepChk" value="' + t.id + '"' + (curDeps.indexOf(t.id) !== -1 ? " checked" : "") + '>' +
+            '<span style="width:8px;height:8px;border-radius:2px;flex-shrink:0;background:' + (t.color || "var(--accent)") + ';"></span>' +
+            '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(t.title) + "</span>" +
+          "</label>";
+        }).join("");
+    var swatches = SWATCHES.map(function (c) {
+      return '<button class="swatch' + (it.color === c ? " active" : "") + '" style="background:' + c + '" data-color="' + c + '"></button>';
+    }).join("");
+
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlay"><div class="modal">' +
+        "<h2>" + (isNew ? "Новая задача" : "Задача") + "</h2>" +
+        '<div class="field"><label>Название</label><input type="text" id="fTitle" value="' + escapeHtml(it.title) + '" placeholder="Например, Дизайн главной страницы"></div>' +
+        '<div class="field"><label>Этап</label><select id="fGroup">' + groupOpts + "</select></div>" +
+        '<div class="field"><label>Исполнители (можно выбрать нескольких)</label><div id="fAssigneeList" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;max-height:150px;overflow-y:auto;">' + teamChecklist + '</div><button class="btn-ghost" id="btnQuickAddMember" type="button" style="margin-top:8px;">+ человек</button></div>' +
+        '<div class="field checkline"><input type="checkbox" id="fMilestone"' + (it.milestone ? " checked" : "") + '> <label style="margin:0;" for="fMilestone">Это веха (контрольная точка на один день)</label></div>' +
+        '<div class="row2">' +
+          '<div class="field"><label id="lblStart">' + (curDeps.length ? "День начала (задан предшественником)" : "День начала") + '</label><input type="number" min="1" step="1" id="fStart" value="' + toDayNum(it.start) + '"' + (curDeps.length ? " disabled title=\"Определяется зависимостью «Финиш-Старт» — снимите зависимости, чтобы задать вручную\"" : "") + '></div>' +
+          '<div class="field" id="workDaysField"><label>Рабочих дней</label><input type="number" min="1" step="1" id="fWorkDays" value="' + workingDaysBetween(toDayNum(it.start), toDayNum(it.end || it.start)) + '"></div>' +
+          '<div class="field" id="endField"><label>День окончания</label><input type="number" min="1" step="1" id="fEnd" value="' + toDayNum(it.end || it.start) + '"></div>' +
+        "</div>" +
+        '<p style="margin:-6px 0 14px;font-size:11.5px;color:var(--ink-faint);">Впишите нужное число рабочих дней — день окончания подстроится сам (пересчёт учитывает выходные и праздники). День окончания тоже можно править напрямую.' + (curDeps.length ? " День начала недоступен для правки, пока есть зависимости (ФС) — он всегда равен «конец предшественника + 1»." : "") + '</p>' +
+        '<div class="field"><label>Зависит от — тип связи «Финиш-Старт» (ФС): начнётся после их завершения</label><div id="fDepsList" style="border:1px solid var(--border);border-radius:6px;padding:8px 10px;max-height:140px;overflow-y:auto;">' + depsChecklist + "</div></div>" +
+        '<div class="field"><label>Прогресс</label><div class="rangeRow"><input type="range" min="0" max="100" step="5" id="fProgress" value="' + (it.progress || 0) + '"><span class="rangeVal" id="progressVal">' + (it.progress || 0) + "%</span></div></div>" +
+        '<div class="field"><label>Цвет полосы</label><div class="swatches" id="fSwatches">' + swatches + "</div></div>" +
+        '<div class="modal-actions">' +
+          (isNew ? "<span></span>" : '<button class="btn-ghost btn-danger" id="btnDeleteTask">Удалить</button>') +
+          '<div class="right-actions"><button class="btn-ghost" id="btnCancel">Отмена</button><button class="btn btn-primary" id="btnSaveTask">Сохранить</button></div>' +
+        "</div>" +
+      "</div></div>";
+
+    document.getElementById("overlay").addEventListener("mousedown", function (e) { if (e.target.id === "overlay") closeModal(); });
+    document.getElementById("btnCancel").addEventListener("click", closeModal);
+    document.getElementById("fProgress").addEventListener("input", function (e) { document.getElementById("progressVal").textContent = e.target.value + "%"; });
+    document.getElementById("fMilestone").addEventListener("change", function (e) {
+      document.getElementById("endField").style.display = e.target.checked ? "none" : "";
+      document.getElementById("workDaysField").style.display = e.target.checked ? "none" : "";
+      document.getElementById("lblStart").textContent = e.target.checked ? "День вехи" : (curDeps.length ? "День начала (задан предшественником)" : "День начала");
+    });
+    if (it.milestone) {
+      document.getElementById("endField").style.display = "none";
+      document.getElementById("workDaysField").style.display = "none";
+      document.getElementById("lblStart").textContent = "День вехи";
+    }
+    var fStartEl = document.getElementById("fStart"), fWorkDaysEl = document.getElementById("fWorkDays"), fEndEl = document.getElementById("fEnd");
+    fWorkDaysEl.addEventListener("change", function () {
+      var s = toDayNum(fStartEl.value);
+      var wd = Math.max(1, parseInt(fWorkDaysEl.value, 10) || 1);
+      fWorkDaysEl.value = wd;
+      fEndEl.value = endDayForWorkingDays(s, wd);
+    });
+    fStartEl.addEventListener("change", function () {
+      var s = toDayNum(fStartEl.value);
+      var wd = Math.max(1, parseInt(fWorkDaysEl.value, 10) || 1);
+      fEndEl.value = endDayForWorkingDays(s, wd);
+    });
+    fEndEl.addEventListener("change", function () {
+      var s = toDayNum(fStartEl.value);
+      var e2 = toDayNum(fEndEl.value);
+      if (e2 < s) { e2 = s; fEndEl.value = e2; }
+      fWorkDaysEl.value = workingDaysBetween(s, e2);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("#fSwatches .swatch"), function (btn) {
+      btn.addEventListener("click", function () { it.color = btn.getAttribute("data-color"); renderTaskModal(); });
+    });
+    document.getElementById("btnQuickAddMember").addEventListener("click", function () {
+      var currentChecked = Array.prototype.map.call(document.querySelectorAll(".fAssigneeChk:checked"), function (cb) { return cb.value; });
+      showPrompt("Имя нового участника команды", "Например, Иван Петров", function (name) {
+        it.assigneeIds = currentChecked;
+        var color = SWATCHES[state.team.length % SWATCHES.length];
+        var m = { id: uid(), name: name, color: color };
+        state.team.push(m);
+        writeBoard();
+        it.assigneeIds.push(m.id);
+        renderTaskModal();
+      });
+    });
+    var delBtn = document.getElementById("btnDeleteTask");
+    if (delBtn) delBtn.addEventListener("click", function () { showConfirm("Удалить эту задачу?", function () { deleteTask(it.id); closeModal(); }); });
+    document.getElementById("btnSaveTask").addEventListener("click", function () {
+      var title = document.getElementById("fTitle").value.trim();
+      if (!title) { document.getElementById("fTitle").focus(); return; }
+      it.title = title;
+      it.groupId = document.getElementById("fGroup").value;
+      it.assigneeIds = Array.prototype.map.call(document.querySelectorAll(".fAssigneeChk:checked"), function (cb) { return cb.value; });
+      it.milestone = document.getElementById("fMilestone").checked;
+      it.start = toDayNum(document.getElementById("fStart").value);
+      it.end = it.milestone ? it.start : toDayNum(document.getElementById("fEnd").value);
+      if (it.end < it.start) it.end = it.start;
+      it.progress = parseInt(document.getElementById("fProgress").value, 10);
+      var chosenDeps = Array.prototype.map.call(document.querySelectorAll(".fDepChk:checked"), function (cb) { return cb.value; });
+      var rejected = [];
+      it.dependencies = chosenDeps.filter(function (depId) {
+        if (depId === it.id) return false;
+        if (hasPathTo(depId, it.id)) { rejected.push(depId); return false; }
+        return true;
+      });
+      if (rejected.length) {
+        var names = rejected.map(function (id) { var t = taskById(id); return t ? t.title : id; }).join(", ");
+        showToast("Не удалось добавить зависимость от «" + names + "» — это создало бы циклическую связь.");
+      }
+      commitTaskChange(it);
+      closeModal();
+    });
+  }
+
+  // ---------- team modal ----------
+  document.getElementById("btnTeam").addEventListener("click", openTeamModal);
+  function openTeamModal() {
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayTeam"><div class="modal">' +
+        "<h2>Команда</h2>" +
+        '<div class="teamList" id="teamListEl"></div>' +
+        '<div class="addRow"><input type="text" id="newMemberName" placeholder="Имя нового участника"><button class="btn btn-primary" id="btnAddMember" type="button">Добавить</button></div>' +
+        '<div class="modal-actions"><span></span><div class="right-actions"><button class="btn-ghost" id="btnCloseTeam">Готово</button></div></div>' +
+      "</div></div>";
+    renderTeamList();
+    document.getElementById("overlayTeam").addEventListener("mousedown", function (e) { if (e.target.id === "overlayTeam") closeModal(); });
+    document.getElementById("btnCloseTeam").addEventListener("click", closeModal);
+    document.getElementById("btnAddMember").addEventListener("click", function () {
+      var input = document.getElementById("newMemberName");
+      var name = input.value.trim();
+      if (!name) return;
+      var color = SWATCHES[state.team.length % SWATCHES.length];
+      state.team.push({ id: uid(), name: name, color: color });
+      writeBoard();
+      input.value = "";
+      renderTeamList();
+    });
+  }
+  function renderTeamList() {
+    var el = document.getElementById("teamListEl");
+    if (!el) return;
+    if (state.team.length === 0) { el.innerHTML = '<p style="color:var(--ink-faint);font-size:12.5px;margin:4px 0;">Пока никого нет — добавьте первого участника.</p>'; return; }
+    el.innerHTML = state.team.map(function (m) {
+      return '<div class="teamRow"><span class="avatar" style="background:' + m.color + '">' + initials(m.name) + '</span><input type="text" data-mid="' + m.id + '" value="' + escapeHtml(m.name) + '"><button class="iconBtn" data-mdel="' + m.id + '" title="Удалить">✕</button></div>';
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll("input[data-mid]"), function (inp) {
+      inp.addEventListener("change", function () {
+        var m = teamById(inp.getAttribute("data-mid"));
+        if (m) { m.name = inp.value.trim() || m.name; writeBoard(); }
+      });
+    });
+    Array.prototype.forEach.call(el.querySelectorAll("[data-mdel]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var mid = btn.getAttribute("data-mdel");
+        if (state.tasks.some(function (t) { return assigneeIdsOf(t).indexOf(mid) !== -1; })) { showToast("Этот участник назначен на задачи — сначала переназначьте их."); return; }
+        state.team = state.team.filter(function (m) { return m.id !== mid; });
+        writeBoard();
+        renderTeamList();
+      });
+    });
+  }
+
+  // ---------- holidays modal ----------
+  document.getElementById("btnHolidays").addEventListener("click", openHolidaysModal);
+  function openHolidaysModal() {
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayHolidays"><div class="modal">' +
+        "<h2>Праздничные дни</h2>" +
+        '<p style="margin:-6px 0 14px;font-size:11.5px;color:var(--ink-faint);">Столбец «Дни» и шкала не учитывают эти дни как рабочие — в дополнение к виртуальным выходным (дни 6 и 7 каждой недели проекта).</p>' +
+        '<div class="teamList" id="holidayListEl"></div>' +
+        '<div class="addRow"><input type="number" min="1" step="1" id="newHolidayDay" placeholder="Номер дня проекта"><button class="btn btn-primary" id="btnAddHoliday" type="button">Добавить</button></div>' +
+        '<div class="modal-actions"><span></span><div class="right-actions"><button class="btn-ghost" id="btnCloseHolidays">Готово</button></div></div>' +
+      "</div></div>";
+    renderHolidayList();
+    document.getElementById("overlayHolidays").addEventListener("mousedown", function (e) { if (e.target.id === "overlayHolidays") closeModal(); });
+    document.getElementById("btnCloseHolidays").addEventListener("click", closeModal);
+    document.getElementById("btnAddHoliday").addEventListener("click", function () {
+      var input = document.getElementById("newHolidayDay");
+      var day = toDayNum(input.value);
+      if (!input.value.trim()) return;
+      if (state.holidays.indexOf(day) === -1) { state.holidays.push(day); state.holidays.sort(function (a, b) { return a - b; }); writeBoard(); renderAll(); }
+      input.value = "";
+      renderHolidayList();
+    });
+  }
+  function renderHolidayList() {
+    var el = document.getElementById("holidayListEl");
+    if (!el) return;
+    if (state.holidays.length === 0) { el.innerHTML = '<p style="color:var(--ink-faint);font-size:12.5px;margin:4px 0;">Праздники не добавлены.</p>'; return; }
+    el.innerHTML = state.holidays.map(function (day) {
+      return '<div class="teamRow"><span style="flex:1;font-size:13px;">День ' + day + "</span><button class=\"iconBtn\" data-hdel=\"" + day + "\" title=\"Удалить\">✕</button></div>";
+    }).join("");
+    Array.prototype.forEach.call(el.querySelectorAll("[data-hdel]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var day = parseInt(btn.getAttribute("data-hdel"), 10);
+        state.holidays = state.holidays.filter(function (d) { return d !== day; });
+        writeBoard();
+        renderAll();
+        renderHolidayList();
+      });
+    });
+  }
+
+// ---------- public share links (read-only snapshot in the bucket) ----------
+  var VIEWER_URL = "https://aknetoria-afk.github.io/roadmap-view.html";
+  var shareTimer = null;
+
+  function currentProjectMeta() { return state.projects.find(function (p) { return p.id === state.projectId; }) || null; }
+  function shareTokenOf() { var m = currentProjectMeta(); return m && m.shareToken ? m.shareToken : ""; }
+  function shareLinkFor(token) { return VIEWER_URL + "?t=" + token; }
+  function newShareToken() {
+    var a = new Uint8Array(24);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    return Array.prototype.map.call(a, function (b) { return (b % 36).toString(36); }).join("");
+  }
+  function snapshotCore() {
+    var m = currentProjectMeta() || {};
+    return {
+      v: 1, name: m.name || "Без названия", description: m.description || "", topic: m.topic || "",
+      groups: state.groups.map(function (g) { return { id: g.id, label: g.label, color: g.color }; }),
+      team: state.team.map(function (t) { return { id: t.id, name: t.name, color: t.color }; }),
+      holidays: state.holidays.slice(),
+      tasks: state.tasks.map(function (t) {
+        return { id: t.id, title: t.title, groupId: t.groupId, assigneeIds: assigneeIdsOf(t), start: t.start, end: t.end,
+                 progress: t.progress || 0, milestone: !!t.milestone, color: t.color, dependencies: depIdsOf(t) };
+      })
+    };
+  }
+  // one request to the publishing function; rejects with a human-readable reason
+  function shareRequest(method, token, body) {
+    var opts = { method: method, headers: { "X-Edit-Key": getPassword() } };
+    if (body != null) { opts.body = body; opts.headers["Content-Type"] = "application/json"; }
+    return fetch(FUNCTION_URL + "?share=" + token, opts).then(function (r) {
+      return r.text().then(function (txt) {
+        var data = null; try { data = JSON.parse(txt); } catch (e) {}
+        if (r.status === 403) throw new Error("Сервер не принял пароль. Нажмите «Сменить пароль» в библиотеке и введите его заново.");
+        if (!r.ok) throw new Error("Сервер вернул ошибку " + r.status + (data && data.error ? ": " + data.error : "."));
+        if (!data || data.ok !== true) throw new Error("Сервер ответил не так, как ожидалось: проверьте, что код функции в Yandex Cloud обновлён.");
+      });
+    }, function () {
+      throw new Error("Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.");
+    });
+  }
+  function sharePublish(token) {
+    var core = snapshotCore();
+    var fp = JSON.stringify(core);
+    core.updatedAt = Date.now();
+    return shareRequest("POST", token, JSON.stringify(core)).then(function () { state._sharedFp = fp; });
+  }
+  function shareRevoke(token) { return shareRequest("DELETE", token, null); }
+  function shareFail(err, fallback) {
+    var msg = (err && err.message) || fallback;
+    var box = document.getElementById("shErr");
+    if (box) { box.textContent = msg; box.style.display = "block"; } else showToast(msg, 12000);
+  }
+  function setProjectShareToken(token) {
+    var cur = currentProjectMeta();
+    if (cur) cur.shareToken = token || "";
+    return remoteWrite("index", { upsert: { id: state.projectId, shareToken: token || "" } });
+  }
+  // keep the public copy in step with edits made here (never before this project's data has loaded)
+  function maybeSyncShare() {
+    var token = shareTokenOf();
+    if (!token || !state._projectLoaded) return;
+    var fp = JSON.stringify(snapshotCore());
+    if (state._sharedFp == null) { state._sharedFp = fp; return; }
+    if (fp === state._sharedFp) return;
+    clearTimeout(shareTimer);
+    shareTimer = setTimeout(function () { sharePublish(token).catch(function (e) { shareFail(e, "Не удалось обновить публичную ссылку."); }); }, 2500);
+  }
+
+  function copyText(text, inputEl) {
+    function legacy() {
+      try { inputEl.focus(); inputEl.select(); var ok = document.execCommand("copy"); showToast(ok ? "Ссылка скопирована." : "Выделите ссылку и скопируйте вручную (Ctrl+C)."); }
+      catch (e) { showToast("Выделите ссылку и скопируйте вручную (Ctrl+C)."); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { showToast("Ссылка скопирована."); }, legacy);
+    else legacy();
+  }
+
+  function openShareModal() {
+    if (!state.projectId) return;
+    var token = shareTokenOf();
+    var body;
+    var errBox = '<p class="shareErr" id="shErr" style="display:none;"></p>';
+    if (!token) {
+      body =
+        '<p class="shareNote">Создаст публичную ссылку на <b>эту</b> дорожную карту. Открывается без входа и аккаунта, в режиме «только просмотр»; другие карты из библиотеки по ней не видны. В карте видны названия задач, сроки и имена исполнителей.</p>' +
+        '<div class="modal-actions"><span></span><div class="right-actions"><button class="btn-ghost" id="shClose">Отмена</button><button class="btn btn-primary" id="shCreate">Создать ссылку</button></div></div>' + errBox;
+    } else {
+      body =
+        '<p class="shareNote">Любой, у кого есть эта ссылка, может открыть дорожную карту в режиме «только просмотр».</p>' +
+        '<div class="shareBox"><input type="text" id="shLink" readonly value="' + escapeHtml(shareLinkFor(token)) + '"><button class="btn btn-primary" id="shCopy">Копировать</button></div>' +
+        '<p class="shareState">Ссылка обновляется автоматически, когда карту правят здесь. Дата последнего обновления видна внизу публичной страницы.</p>' +
+        '<div class="modal-actions"><button class="btn-ghost btn-danger" id="shRevoke">Отключить ссылку</button><div class="right-actions"><button class="btn-ghost" id="shRefresh">Обновить сейчас</button><button class="btn btn-primary" id="shClose">Готово</button></div></div>' + errBox;
+    }
+    document.getElementById("modalRoot").innerHTML =
+      '<div class="overlay" id="overlayShare"><div class="modal" style="max-width:480px;"><h2>Поделиться дорожной картой</h2>' + body + "</div></div>";
+    document.getElementById("overlayShare").addEventListener("mousedown", function (e) { if (e.target.id === "overlayShare") closeModal(); });
+    document.getElementById("shClose").addEventListener("click", closeModal);
+    var create = document.getElementById("shCreate");
+    if (create) create.addEventListener("click", function () {
+      create.disabled = true; create.textContent = "Создаём…";
+      var t = newShareToken();
+      sharePublish(t).then(function () { return setProjectShareToken(t); }).then(function () { openShareModal(); })
+        .catch(function (e) { create.disabled = false; create.textContent = "Создать ссылку"; shareFail(e, "Не удалось создать ссылку."); });
+    });
+    var copy = document.getElementById("shCopy");
+    if (copy) copy.addEventListener("click", function () { var inp = document.getElementById("shLink"); copyText(inp.value, inp); });
+    var refresh = document.getElementById("shRefresh");
+    if (refresh) refresh.addEventListener("click", function () {
+      refresh.disabled = true;
+      sharePublish(token).then(function () { refresh.disabled = false; showToast("Публичная копия обновлена."); })
+        .catch(function (e) { refresh.disabled = false; shareFail(e, "Не удалось обновить публичную копию."); });
+    });
+    var revoke = document.getElementById("shRevoke");
+    if (revoke) revoke.addEventListener("click", function () {
+      showConfirm("Отключить публичную ссылку? Те, кому вы её отправили, больше не смогут открыть карту.", function () {
+        shareRevoke(token).then(function () { return setProjectShareToken(""); }).then(function () { state._sharedFp = null; showToast("Ссылка отключена."); })
+          .catch(function (e) { shareFail(e, "Не удалось отключить ссылку."); });
+      });
+    });
+  }
+  document.getElementById("btnShare").addEventListener("click", openShareModal);
+
+    // ---------- PDF export ----------
+  document.getElementById("btnPdf").addEventListener("click", exportPdf);
+
+  function buildPrintNode() {
+    var dayWidth = 8;
+    var range = computeRange();
+    var totalDays = range.totalDays;
+    dayWidth = Math.max(3, Math.min(22, Math.round(1100 / totalDays)));
+    var timelineWidth = totalDays * dayWidth;
+    var sbw = 360;
+
+    var wrap = document.createElement("div");
+    wrap.style.cssText = "position:fixed;top:0;left:0;background:var(--panel);padding:26px;width:" + (sbw + timelineWidth + 60) + "px;font-family:'Inter',sans-serif;color:var(--ink);";
+    wrap.style.zIndex = "1";
+
+    var title = document.createElement("div");
+    title.style.cssText = "font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;margin-bottom:2px;";
+    title.textContent = (currentProjectMeta() && currentProjectMeta().name) || "План проекта";
+    var sub = document.createElement("div");
+    sub.style.cssText = "font-size:12px;color:var(--ink-soft);margin-bottom:16px;";
+    var now = new Date();
+    sub.textContent = "Экспорт от " + pad2(now.getDate()) + "." + pad2(now.getMonth() + 1) + "." + now.getFullYear();
+
+    var headWrap = document.createElement("div");
+    headWrap.style.cssText = "display:flex;border:1px solid var(--border);border-bottom:none;";
+    var sideHead = document.createElement("div");
+    sideHead.style.cssText = "flex:0 0 " + sbw + "px;width:" + sbw + "px;border-right:1px solid var(--border);display:flex;align-items:center;padding:8px 10px;font-size:11px;font-weight:600;color:var(--ink-faint);";
+    sideHead.textContent = "Задача / Исполнитель / Рабочие дни";
+    var tlHead = document.createElement("div");
+    tlHead.style.cssText = "position:relative;height:54px;width:" + timelineWidth + "px;";
+    headWrap.appendChild(sideHead); headWrap.appendChild(tlHead);
+
+    var layout = buildRows();
+
+    var bodyWrap = document.createElement("div");
+    bodyWrap.style.cssText = "display:flex;border:1px solid var(--border);position:relative;";
+    var sideBody = document.createElement("div");
+    sideBody.id = "printSidebarRows";
+    sideBody.style.cssText = "flex:0 0 " + sbw + "px;width:" + sbw + "px;border-right:1px solid var(--border);position:relative;height:" + layout.totalHeight + "px;";
+    var tlBody = document.createElement("div");
+    tlBody.style.cssText = "position:relative;width:" + timelineWidth + "px;height:" + layout.totalHeight + "px;";
+    var grid = document.createElement("div");
+    grid.id = "printGrid";
+    grid.style.cssText = "position:absolute;top:0;left:0;width:" + timelineWidth + "px;height:" + layout.totalHeight + "px;";
+    var rows = document.createElement("div");
+    rows.id = "printRows";
+    rows.style.cssText = "position:absolute;top:0;left:0;width:" + timelineWidth + "px;height:" + layout.totalHeight + "px;";
+    var deps = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    deps.id = "printDeps";
+    deps.style.cssText = "position:absolute;top:0;left:0;overflow:visible;";
+    var defsClone = document.getElementById("depsLayer").querySelector("defs").cloneNode(true);
+    deps.appendChild(defsClone);
+    tlBody.appendChild(grid); tlBody.appendChild(rows); tlBody.appendChild(deps);
+    bodyWrap.appendChild(sideBody); bodyWrap.appendChild(tlBody);
+
+    wrap.appendChild(title); wrap.appendChild(sub); wrap.appendChild(headWrap); wrap.appendChild(bodyWrap);
+    document.body.appendChild(wrap);
+
+    tlHead.id = "printHeadInner";
+    renderHeader("printHeadInner", range, dayWidth, timelineWidth, layout.totalHeight);
+    renderGrid("printGrid", range, dayWidth, timelineWidth, layout.totalHeight);
+    renderSidebarRows("printSidebarRows", layout, true);
+    renderTimelineRows("printRows", layout, range, dayWidth, true);
+    renderDeps("printDeps", layout, range, dayWidth, timelineWidth);
+
+    return wrap;
+  }
+
+  function exportPdf() {
+    var overlay = document.getElementById("printOverlay");
+    var overlayText = document.getElementById("printOverlayText");
+    var btn = document.getElementById("btnPdf");
+    if (!window.html2canvas || !(window.jspdf && window.jspdf.jsPDF)) { showToast("Не удалось загрузить библиотеку PDF. Обновите страницу и проверьте интернет."); return; }
+    btn.disabled = true;
+    overlay.classList.add("show");
+    overlayText.textContent = "Готовим PDF…";
+
+    var node = buildPrintNode();
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        html2canvas(node, { scale: 2, backgroundColor: "#ffffff" }).then(function (canvas) {
+          document.body.removeChild(node);
+          var pdf = new window.jspdf.jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+          var M = 20;
+          var pageW = pdf.internal.pageSize.getWidth();
+          var pageH = pdf.internal.pageSize.getHeight();
+          var usableW = pageW - 2 * M, usableH = pageH - 2 * M;
+          var imgW = usableW, imgH = canvas.height * imgW / canvas.width;
+          var imgData = canvas.toDataURL("image/png");
+          var heightLeft = imgH, position = M;
+          pdf.addImage(imgData, "PNG", M, position, imgW, imgH);
+          heightLeft -= usableH;
+          while (heightLeft > 0) {
+            position = M - (imgH - heightLeft);
+            pdf.addPage();
+            pdf.addImage(imgData, "PNG", M, position, imgW, imgH);
+            heightLeft -= usableH;
+          }
+          var now = new Date();
+          var meta = currentProjectMeta() || {};
+          var base = (meta.name || "plan").replace(/[^A-Za-z0-9\u0400-\u04FF]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "plan";
+          pdf.save(base + "-" + now.getFullYear() + pad2(now.getMonth() + 1) + pad2(now.getDate()) + ".pdf");
+          finishExport("");
+        }).catch(function () {
+          try { document.body.removeChild(node); } catch (e) {}
+          finishExport("Не удалось подготовить изображение для PDF.");
+        });
+      });
+    });
+
+    function finishExport(msg) {
+      overlay.classList.remove("show");
+      btn.disabled = false;
+      if (msg) showBanner(msg);
+    }
+  }
+
+  // ---------- column resizing ----------
+  var COL_KEY = "gantt_col_widths_v1";
+  var COL_DEFAULTS = { title: 150, who: 110, days: 80 };
+  var COL_MIN = { title: 90, who: 56, days: 56 };
+  var COL_MAX = { title: 460, who: 220, days: 150 };
+
+  function applyColWidth(col, px) {
+    document.body.style.setProperty("--col-" + col + "-w", px + "px");
+  }
+  function getColWidth(col) {
+    return parseFloat(getComputedStyle(document.body).getPropertyValue("--col-" + col + "-w")) || COL_DEFAULTS[col];
+  }
+  function loadColumnWidths() {
+    try {
+      var raw = localStorage.getItem(COL_KEY);
+      if (!raw) return;
+      var w = JSON.parse(raw);
+      Object.keys(COL_DEFAULTS).forEach(function (c) { if (w[c]) applyColWidth(c, w[c]); });
+    } catch (e) {}
+  }
+  function saveColumnWidths() {
+    try {
+      var w = {};
+      Object.keys(COL_DEFAULTS).forEach(function (c) { w[c] = getColWidth(c); });
+      localStorage.setItem(COL_KEY, JSON.stringify(w));
+    } catch (e) {}
+  }
+  function setupColumnResize() {
+    Array.prototype.forEach.call(document.querySelectorAll(".colResizer"), function (handle) {
+      var col = handle.getAttribute("data-resize");
+
+      function startDrag(startClientX) {
+        var startWidth = getColWidth(col);
+        handle.classList.add("active");
+        document.body.classList.add("resizing-cols");
+        return function (clientX) {
+          var next = Math.max(COL_MIN[col], Math.min(COL_MAX[col], startWidth + (clientX - startClientX)));
+          applyColWidth(col, next);
+        };
+      }
+      function endDrag() {
+        handle.classList.remove("active");
+        document.body.classList.remove("resizing-cols");
+        saveColumnWidths();
+      }
+
+      handle.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        var onMove = startDrag(e.clientX);
+        function move(ev) { onMove(ev.clientX); }
+        function up() { document.removeEventListener("mousemove", move); document.removeEventListener("mouseup", up); endDrag(); }
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", up);
+      });
+      handle.addEventListener("touchstart", function (e) {
+        var t = e.touches[0];
+        var onMove = startDrag(t.clientX);
+        function move(ev) { onMove(ev.touches[0].clientX); ev.preventDefault(); }
+        function end() { document.removeEventListener("touchmove", move); document.removeEventListener("touchend", end); endDrag(); }
+        document.addEventListener("touchmove", move, { passive: false });
+        document.addEventListener("touchend", end);
+      }, { passive: true });
+      handle.addEventListener("dblclick", function () {
+        applyColWidth(col, COL_DEFAULTS[col]);
+        saveColumnWidths();
+      });
+    });
+  }
+
+  document.getElementById("btnChangePw").addEventListener("click", function () {
+    clearPassword();
+    askPassword("").then(function () { lastCatalogRaw = null; loadCatalog(true); });
+  });
+  document.getElementById("btnImport").addEventListener("click", function () { document.getElementById("importFile").click(); });
+  document.getElementById("importFile").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () { try { importRoadmaps(JSON.parse(rd.result)); } catch (err) { showToast("Не удалось прочитать файл импорта."); } };
+    rd.readAsText(f);
+  });
+  document.getElementById("btnDeleteProject").addEventListener("click", function () {
+    if (!state.projectId) return;
+    var meta = currentProjectMeta();
+    showConfirm("Удалить дорожную карту «" + ((meta && meta.name) || "без названия") + "» вместе со всеми задачами? Публичная ссылка на неё тоже перестанет работать.", function () { deleteProject(state.projectId); });
+  });
+
+  // ---------- init ----------
+  loadColumnWidths();
+  setupColumnResize();
+  var hashMatch = /(?:^#|&)p=([^&]+)/.exec(location.hash);
+  if (hashMatch) { state.projectId = decodeURIComponent(hashMatch[1]); state.view = "project"; }
+  window.addEventListener("hashchange", function () {
+    var m = /(?:^#|&)p=([^&]+)/.exec(location.hash);
+    if (m) { var id = decodeURIComponent(m[1]); if (id !== state.projectId) openProject(id); }
+    else if (state.view === "project") backToLibrary();
+  });
+  renderCurrentView();
+  initStorage();
+})();
+</script>
+</body>
+</html>
