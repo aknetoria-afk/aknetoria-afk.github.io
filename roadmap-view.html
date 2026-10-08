@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Дорожная карта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#F3F5F8; --panel:#FFFFFF; --panel-alt:#F7F9FB;
+    --ink:#1B3650; --ink-soft:#5B6F84; --ink-faint:#8FA0B1;
+    --border:#DCE3EA; --border-soft:#E9EEF3;
+    --accent:#2CB6D1; --weekend:rgba(27,54,80,.055); --holiday:rgba(242,63,168,.09);
+    --dep:#8A98A8; --danger:#F23FA8;
+  }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; }
+  body { background:var(--bg); color:var(--ink); font-family:'Manrope',-apple-system,'Segoe UI',sans-serif; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; font-variant-numeric:tabular-nums; }
+  .top { flex:0 0 auto; background:#1B3650; color:#fff; padding:14px 22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .top .titles { flex:1 1 280px; min-width:0; }
+  .top h1 { margin:0; font-family:'Unbounded',sans-serif; font-weight:600; font-size:18px; line-height:1.3; }
+  .top p { margin:3px 0 0; font-size:12.5px; color:#AEBFD1; }
+  .top .meta { display:flex; gap:14px; font-size:12px; color:#AEBFD1; }
+  .top .meta b { color:#fff; font-weight:600; }
+  .top select, .top button { background:#22405D; color:#fff; border:1px solid rgba(255,255,255,.18); border-radius:8px; padding:8px 12px; font:inherit; font-size:12.5px; cursor:pointer; }
+  .top button:hover, .top select:hover { background:#294B6B; }
+  .badge { font-size:11px; letter-spacing:.06em; color:#7891A9; }
+
+  .chart { flex:1 1 auto; min-height:0; overflow:auto; background:var(--panel); position:relative; }
+  .inner { position:relative; }
+  .head { position:sticky; top:0; z-index:8; display:flex; background:var(--panel); border-bottom:1px solid var(--border); height:54px; }
+  .sbHead { position:sticky; left:0; z-index:9; background:var(--panel); border-right:1px solid var(--border); display:flex; flex:0 0 auto; }
+  .sbHead div, .col { padding:0 10px; display:flex; align-items:center; }
+  .sbHead div { font-size:11px; font-weight:600; color:var(--ink-faint); }
+  .col-title { width:var(--wt); flex:0 0 var(--wt); min-width:0; }
+  .col-who { width:var(--ww); flex:0 0 var(--ww); }
+  .col-days { width:var(--wd); flex:0 0 var(--wd); justify-content:flex-end; }
+  .tlHead { position:relative; flex:0 0 auto; height:54px; }
+  .week { position:absolute; top:0; height:22px; border-right:1px solid var(--border-soft); padding-left:8px; display:flex; align-items:center; font-size:11.5px; font-weight:700; color:var(--ink-soft); white-space:nowrap; overflow:hidden; }
+  .dayCell { position:absolute; top:22px; height:32px; border-right:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--ink-faint); }
+  .dayCell.off { background:var(--weekend); }
+
+  .body { display:flex; }
+  .sbBody { position:sticky; left:0; z-index:7; background:var(--panel); border-right:1px solid var(--border); flex:0 0 auto; position:sticky; }
+  .sbRows { position:relative; }
+  .tlBody { position:relative; flex:0 0 auto; }
+  .sideRow, .groupSide { position:absolute; left:0; width:100%; display:flex; align-items:center; border-bottom:1px solid var(--border-soft); }
+  .groupSide { background:var(--panel-alt); padding:0 10px; gap:8px; font-weight:700; font-size:12.5px; }
+  .groupSide .dot { width:9px; height:9px; border-radius:2px; flex:0 0 auto; }
+  .groupSide .gname { flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .groupSide .gdays { font-size:11px; color:var(--ink-faint); font-weight:600; flex:0 0 auto; }
+  .sideRow .col-title { flex-direction:column; align-items:stretch; justify-content:center; gap:3px; }
+  .t-title { font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t-prog { height:3px; background:var(--border-soft); border-radius:2px; overflow:hidden; }
+  .t-prog i { display:block; height:100%; }
+  .who { display:flex; align-items:center; gap:5px; min-width:0; }
+  .avatar { width:19px; height:19px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:#fff; border:2px solid var(--panel); }
+  .who-name { font-size:11.5px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t-days { font-size:11px; color:var(--ink-faint); }
+
+  .groupBand { position:absolute; left:0; width:100%; border-bottom:1px solid var(--border-soft); }
+  .wk { position:absolute; top:0; background:var(--weekend); }
+  .wk.hol { background:var(--holiday); }
+  .wline { position:absolute; top:0; border-left:1px solid var(--border-soft); }
+  .gbar { position:absolute; height:14px; z-index:2; }
+  .gbar .gbg { position:absolute; inset:0; opacity:.3; border-radius:3px; }
+  .gbar .gfill { position:absolute; left:0; top:0; bottom:0; border-radius:3px; opacity:.9; max-width:100%; }
+  .gbar .gl { position:absolute; left:100%; top:0; margin-left:8px; font-size:11px; font-weight:600; color:var(--ink-soft); white-space:nowrap; line-height:14px; }
+  .bar { position:absolute; border-radius:3px; display:flex; align-items:center; }
+  .bar .bg { position:absolute; inset:0; opacity:.28; border-radius:3px; }
+  .bar .pg { position:absolute; top:0; left:0; bottom:0; border-radius:3px; }
+  .bar .lbl { position:relative; z-index:1; font-size:11px; font-weight:600; color:#fff; padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 1px rgba(0,0,0,.25); }
+  .bar.out .lbl { position:absolute; left:100%; margin-left:6px; color:var(--ink); text-shadow:none; }
+  .ms { position:absolute; width:15px; height:15px; transform:rotate(45deg); }
+  .msl { position:absolute; font-size:11px; font-weight:600; white-space:nowrap; }
+  svg.deps { position:absolute; top:0; left:0; pointer-events:none; overflow:visible; z-index:3; }
+  svg.deps path { fill:none; stroke:var(--dep); stroke-width:1.6; }
+
+  .state { margin:auto; text-align:center; color:var(--ink-soft); padding:60px 24px; font-size:14px; line-height:1.6; max-width:420px; }
+  .state h2 { font-family:'Unbounded',sans-serif; font-size:18px; color:var(--ink); margin:0 0 10px; }
+  .foot { flex:0 0 auto; padding:8px 22px; font-size:11.5px; color:var(--ink-faint); background:var(--bg); border-top:1px solid var(--border); }
+  .hidden { display:none !important; }
+
+  @page { size:A4 landscape; margin:10mm; }
+  @media print {
+    html, body { height:auto; background:#fff; }
+    .top select, .top button, .foot { display:none !important; }
+    .top { background:#fff; color:var(--ink); padding:0 0 10px; }
+    .top p, .top .meta { color:var(--ink-soft); } .top .meta b { color:var(--ink); }
+    .chart { overflow:visible; }
+    .head, .sbHead, .sbBody { position:static; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+  @media (max-width:640px) { .top { padding:12px 14px; } .top h1 { font-size:16px; } }
+</style>
+</head>
+<body style="--wt:200px;--ww:150px;--wd:84px;">
+
+<div class="top hidden" id="top">
+  <div class="titles">
+    <div class="badge">ДОРОЖНАЯ КАРТА · ТОЛЬКО ПРОСМОТР</div>
+    <h1 id="pName"></h1>
+    <p id="pDesc"></p>
+  </div>
+  <div class="meta" id="pMeta"></div>
+  <select id="zoom" aria-label="Масштаб">
+    <option value="day">Крупный масштаб</option>
+    <option value="week" selected>Средний масштаб</option>
+    <option value="month">Компактный масштаб</option>
+  </select>
+  <button id="btnPrint" type="button">Печать / PDF</button>
+</div>
+
+<div class="chart hidden" id="chart"></div>
+
+<div class="state" id="stateBox"><h2>Загружаем…</h2></div>
+<div class="foot hidden" id="foot"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // Адрес той же функции, что обслуживает заметки (Yandex Cloud Function)
+  var FUNCTION_URL = "https://functions.yandexcloud.net/d4ega35alhn28oab98di";
+  var POLL_MS = 60000;
+
+  var RH = 40, GH = 34;
+  var ZOOM_WIDTH = { day: 34, week: 14, month: 6 };
+  var snap = null, zoom = "week", lastRaw = "";
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]; }); }
+  function num(v) { var n = parseInt(v, 10); return isNaN(n) || n < 1 ? 1 : n; }
+  function initials(n) { var p = (n || "").trim().split(/\s+/).filter(Boolean); return p.length ? (p[0][0] + (p[1] ? p[1][0] : "")).toUpperCase() : "?"; }
+
+  function isWeekend(d) { var p = ((d - 1) % 7 + 7) % 7; return p === 5 || p === 6; }
+  function isHoliday(d) { return (snap.holidays || []).indexOf(d) !== -1; }
+  function isWorking(d) { return !isWeekend(d) && !isHoliday(d); }
+  function workDays(s, e) { var c = 0; for (var d = s; d <= e; d++) if (isWorking(d)) c++; return c; }
+
+  function showState(title, text) {
+    document.getElementById("top").classList.add("hidden");
+    document.getElementById("chart").classList.add("hidden");
+    document.getElementById("foot").classList.add("hidden");
+    var box = document.getElementById("stateBox");
+    box.classList.remove("hidden");
+    box.innerHTML = "<h2>" + esc(title) + "</h2>" + (text ? "<div>" + esc(text) + "</div>" : "");
+  }
+
+  function token() {
+    var m = /[?&]t=([a-z0-9]+)/.exec(location.search) || /(?:^#|&)t=([a-z0-9]+)/.exec(location.hash);
+    return m ? m[1] : "";
+  }
+
+  function load(first) {
+    var t = token();
+    if (!t) { showState("Ссылка неполная", "В адресе нет кода дорожной карты. Попросите отправителя прислать ссылку ещё раз."); return; }
+    fetch(FUNCTION_URL + "?share=" + encodeURIComponent(t), { cache: "no-store" })
+      .then(function (r) {
+        if (r.status === 404) throw new Error("gone");
+        if (!r.ok) throw new Error("http " + r.status);
+        return r.text();
+      })
+      .then(function (raw) {
+        if (raw === lastRaw) return;
+        lastRaw = raw;
+        snap = JSON.parse(raw);
+        snap.groups = snap.groups || []; snap.team = snap.team || []; snap.tasks = snap.tasks || []; snap.holidays = snap.holidays || [];
+        render();
+      })
+      .catch(function (e) {
+        if (!first && snap) return; // при сбое фонового обновления оставляем то, что уже показано
+        if (e && e.message === "gone") showState("Ссылка не найдена", "Дорожная карта отключена или ссылка введена неверно.");
+        else showState("Не удалось загрузить", "Проверьте соединение и обновите страницу.");
+      });
+  }
+
+  function teamById(id) { for (var i = 0; i < snap.team.length; i++) if (snap.team[i].id === id) return snap.team[i]; return null; }
+  function assignees(t) { return (Array.isArray(t.assigneeIds) ? t.assigneeIds : []).map(teamById).filter(Boolean); }
+  function depIds(t) { return Array.isArray(t.dependencies) ? t.dependencies.filter(Boolean) : []; }
+
+  function whoHtml(t) {
+    var m = assignees(t);
+    if (!m.length) return '<span class="avatar" style="background:#8FA0B1">?</span><span class="who-name">—</span>';
+    var av = m.slice(0, 3).map(function (x, i) { return '<span class="avatar" style="background:' + esc(x.color) + ";margin-left:" + (i ? "-7px" : "0") + '">' + esc(initials(x.name)) + "</span>"; }).join("");
+    var extra = m.length > 3 ? '<span class="avatar" style="background:#8FA0B1;margin-left:-7px">+' + (m.length - 3) + "</span>" : "";
+    return av + extra + '<span class="who-name">' + esc(m.map(function (x) { return x.name; }).join(", ")) + "</span>";
+  }
+
+  function elbow(x1, y1, x2, y2) {
+    var s = 10;
+    if (x2 >= x1 + s * 2) return "M " + x1 + " " + y1 + " H " + (x1 + s) + " V " + y2 + " H " + (x2 - 1);
+    var mid = y1 + (y2 - y1) / 2;
+    return "M " + x1 + " " + y1 + " H " + (x1 + s) + " V " + mid + " H " + (x2 - s) + " V " + y2 + " H " + (x2 - 1);
+  }
+
+  function render(fitWidth) {
+    document.getElementById("stateBox").classList.add("hidden");
+    document.getElementById("top").classList.remove("hidden");
+    document.getElementById("chart").classList.remove("hidden");
+    document.getElementById("foot").classList.remove("hidden");
+
+    var tasks = snap.tasks, maxEnd = 14;
+    tasks.forEach(function (t) { var e = num(t.end || t.start); if (e > maxEnd) maxEnd = e; });
+    var total = maxEnd + 6;
+    var dw = fitWidth ? Math.max(3, Math.min(22, Math.floor(fitWidth / total))) : ZOOM_WIDTH[zoom];
+    var tlW = total * dw;
+
+    // meta
+    document.title = (snap.name || "Дорожная карта");
+    document.getElementById("pName").textContent = snap.name || "Дорожная карта";
+    document.getElementById("pDesc").textContent = snap.description || "";
+    var avg = tasks.length ? Math.round(tasks.reduce(function (s, t) { return s + (t.progress || 0); }, 0) / tasks.length) : 0;
+    document.getElementById("pMeta").innerHTML = "<span>Задач: <b>" + tasks.length + "</b></span><span>Длительность: <b>" + maxEnd + " дн</b></span><span>Прогресс: <b>" + avg + "%</b></span>";
+    var upd = snap.updatedAt ? new Date(snap.updatedAt) : null;
+    document.getElementById("foot").textContent = upd ? "Данные обновлены " + upd.toLocaleString("ru-RU") + ". Страница подгружает изменения автоматически." : "";
+
+    // layout
+    var rows = [], y = 0;
+    snap.groups.forEach(function (g) {
+      var gt = tasks.filter(function (t) { return t.groupId === g.id; }).sort(function (a, b) { return num(a.start) - num(b.start); });
+      var gd = "";
+      if (gt.length) {
+        var gs = Math.min.apply(null, gt.map(function (t) { return num(t.start); }));
+        var ge = Math.max.apply(null, gt.map(function (t) { return num(t.end || t.start); }));
+        gd = workDays(gs, ge);
+      }
+      rows.push({ type: "g", g: g, top: y, h: GH, gd: gd }); y += GH;
+      gt.forEach(function (t) { rows.push({ type: "t", t: t, top: y, h: RH }); y += RH; });
+    });
+    var H = y;
+
+    // sidebar
+    var sb = rows.map(function (r) {
+      if (r.type === "g") {
+        return '<div class="groupSide" style="top:' + r.top + "px;height:" + r.h + 'px"><span class="dot" style="background:' + esc(r.g.color) + '"></span><span class="gname">' + esc(r.g.label) + '</span><span class="gdays" title="Длительность этапа, раб. дн.">' + r.gd + "</span></div>";
+      }
+      var t = r.t, wd = workDays(num(t.start), num(t.end || t.start));
+      return '<div class="sideRow" style="top:' + r.top + "px;height:" + r.h + 'px"><div class="col col-title" title="' + esc(t.title) + '"><span class="t-title">' + esc(t.title) + '</span><span class="t-prog"><i style="width:' + (t.progress || 0) + "%;background:" + esc(t.color || "#2CB6D1") + '"></i></span></div><div class="col col-who who">' + whoHtml(t) + '</div><div class="col col-days t-days">' + (t.milestone ? "веха" : wd) + "</div></div>";
+    }).join("");
+
+    // header
+    var hd = "", x = 0, di = 0, wn = 1;
+    while (di < total) { var span = Math.min(7, total - di); hd += '<div class="week" style="left:' + x + "px;width:" + span * dw + 'px">Неделя ' + wn + "</div>"; x += span * dw; di += span; wn++; }
+    for (var i = 0; i < total; i++) hd += '<div class="dayCell' + (isWorking(i + 1) ? "" : " off") + '" style="left:' + i * dw + "px;width:" + dw + 'px">' + (dw >= 15 ? i + 1 : "") + "</div>";
+
+    // grid + bars
+    var grid = "";
+    for (var d = 1; d <= total; d++) if (!isWorking(d)) grid += '<div class="wk' + (isHoliday(d) ? " hol" : "") + '" style="left:' + (d - 1) * dw + "px;width:" + dw + "px;height:" + H + 'px"></div>';
+    for (var j = 0; j < total; j += 7) grid += '<div class="wline" style="left:' + j * dw + "px;height:" + H + 'px"></div>';
+
+    var info = {};
+    var bars = rows.map(function (r) {
+      if (r.type === "g") {
+        var band = '<div class="groupBand" style="top:' + r.top + "px;height:" + r.h + "px;background:" + esc(r.g.color) + '11"></div>';
+        var gts = tasks.filter(function (t) { return t.groupId === r.g.id; });
+        if (!gts.length) return band;
+        var gs = Math.min.apply(null, gts.map(function (t) { return num(t.start); }));
+        var ge = Math.max.apply(null, gts.map(function (t) { return num(t.end || t.start); }));
+        var ga = Math.round(gts.reduce(function (a, t) { return a + (t.progress || 0); }, 0) / gts.length);
+        var gc = esc(r.g.color);
+        return band + '<div class="gbar" style="left:' + (gs - 1) * dw + "px;top:" + (r.top + (r.h - 14) / 2) + "px;width:" + Math.max((ge - gs + 1) * dw - 3, 6) + 'px"><span class="gbg" style="background:' + gc + '"></span><span class="gfill" style="width:' + ga + "%;background:" + gc + '"></span><span class="gl">' + esc(r.g.label) + " · " + workDays(gs, ge) + " дн</span></div>";
+      }
+      var t = r.t; info[t.id] = r;
+      var s = num(t.start), e = num(t.end || t.start), left = (s - 1) * dw, col = esc(t.color || "#2CB6D1");
+      if (t.milestone) return '<div class="ms" style="left:' + left + "px;top:" + (r.top + r.h / 2 - 7) + "px;background:" + col + '"></div><div class="msl" style="left:' + (left + 14) + "px;top:" + (r.top + r.h / 2 - 8) + 'px">' + esc(t.title) + "</div>";
+      var w = Math.max((e - s + 1) * dw - 3, 6), out = w < 46, p = Math.max(0, Math.min(100, t.progress || 0));
+      return '<div class="bar' + (out ? " out" : "") + '" style="left:' + left + "px;top:" + (r.top + 7) + "px;width:" + w + "px;height:" + (r.h - 14) + 'px"><span class="bg" style="background:' + col + '"></span><span class="pg" style="width:' + p + "%;background:" + col + '"></span><span class="lbl">' + esc(t.title) + "</span></div>";
+    }).join("");
+
+    var paths = "";
+    rows.forEach(function (r) {
+      if (r.type !== "t") return;
+      depIds(r.t).forEach(function (pid) {
+        var pr = info[pid]; if (!pr) return;
+        var x1 = num(pr.t.end || pr.t.start) * dw, y1 = pr.top + pr.h / 2;
+        var x2 = (num(r.t.start) - 1) * dw, y2 = r.top + r.h / 2;
+        paths += '<path d="' + elbow(x1, y1, x2, y2) + '" marker-end="url(#ar)"></path>';
+      });
+    });
+
+    var sbw = "calc(var(--wt) + var(--ww) + var(--wd))";
+    document.getElementById("chart").innerHTML =
+      '<div class="inner" style="width:calc(' + sbw + " + " + tlW + 'px)">' +
+        '<div class="head"><div class="sbHead" style="width:' + sbw + '"><div class="col-title">Задача</div><div class="col-who">Исполнитель</div><div class="col-days">Дни (раб.)</div></div><div class="tlHead" style="width:' + tlW + 'px">' + hd + "</div></div>" +
+        '<div class="body"><div class="sbBody" style="width:' + sbw + '"><div class="sbRows" style="height:' + H + 'px">' + sb + '</div></div>' +
+        '<div class="tlBody" style="width:' + tlW + "px;height:" + H + 'px">' + grid + bars +
+          '<svg class="deps" width="' + tlW + '" height="' + H + '" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ar" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:#8A98A8;stroke:none"></path></marker></defs>' + paths + "</svg>" +
+        "</div></div></div>";
+  }
+
+  document.getElementById("zoom").addEventListener("change", function (e) { zoom = e.target.value; if (snap) render(); });
+  document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
+  window.addEventListener("beforeprint", function () { if (snap) render(560); });
+  window.addEventListener("afterprint", function () { if (snap) render(); });
+
+  load(true);
+  setInterval(function () { if (!document.hidden) load(false); }, POLL_MS);
+})();
+</script>
+</body>
+</html>
