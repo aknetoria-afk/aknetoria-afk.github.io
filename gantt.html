@@ -222,9 +222,10 @@
   .groupBand { position:absolute; left:0; width:100%; border-bottom:1px solid var(--border-soft); }
 
   .bar { position:absolute; border-radius:3px; cursor:grab; display:flex; align-items:center; overflow:visible; }
-  .bar .fill-bg { position:absolute; inset:0; opacity:.28; border-radius:3px; overflow:hidden; }
+  .bar .fill-bg { position:absolute; inset:0; opacity:.38; border-radius:3px; overflow:hidden; }
   .bar .fill-progress { position:absolute; top:0; left:0; bottom:0; border-radius:3px; overflow:hidden; }
-  .bar .bar-label { position:relative; z-index:1; font-size:11px; font-weight:600; color:#fff; padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 1px rgba(0,0,0,.25); pointer-events:none; }
+  .bar .bar-label { position:relative; z-index:1; font-size:11px; font-weight:600; color:var(--ink); padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; pointer-events:none; }
+  .bar.onfill .bar-label { color:#fff; text-shadow:0 1px 1px rgba(0,0,0,.25); }
   .bar.outside-label .bar-label { color: var(--ink); text-shadow:none; position:absolute; left:100%; margin-left:6px; }
   .barHandle { position:absolute; top:0; bottom:0; width:8px; cursor:ew-resize; z-index:3; }
   .barHandle.bh-l { left:-2px; }
@@ -1075,7 +1076,7 @@
     while (dayIdx < range.totalDays) {
       var span = Math.min(7, range.totalDays - dayIdx);
       var w = span * dayWidth;
-      html += '<div class="monthBand" style="left:' + x + 'px;width:' + w + 'px;">Неделя ' + weekNum + "</div>";
+      html += '<div class="monthBand" style="left:' + x + 'px;width:' + w + 'px;">' + (w < 84 ? "Н" + weekNum : "Неделя " + weekNum) + "</div>";
       x += w; dayIdx += span; weekNum++;
     }
     // day cells — plain project day numbers; non-working days (virtual weekend/holiday) are tinted
@@ -1083,7 +1084,7 @@
       var dayNum = range.start + i;
       var left = i * dayWidth;
       var cls = "dayCell" + (!isWorkingDay(dayNum) ? " weekend" : "");
-      html += '<div class="' + cls + '" style="left:' + left + 'px;width:' + dayWidth + 'px;">' + (dayWidth >= 15 ? dayNum : "") + "</div>";
+      html += '<div class="' + cls + '" style="left:' + left + 'px;width:' + dayWidth + 'px;' + (dayWidth < 20 ? "font-size:9px;" : "") + '">' + (dayWidth >= 12 ? dayNum : "") + "</div>";
     }
     el.innerHTML = html;
   }
@@ -1188,7 +1189,7 @@
       var outside = w < 46;
       var pct = Math.max(0, Math.min(100, t.progress || 0));
       var handles = printMode ? "" : '<span class="barHandle bh-l" title="Потяните — изменить начало"></span><span class="barHandle bh-r" title="Потяните — изменить конец"></span><span class="linkHandle" title="Потяните — создать связь ФС (Финиш-Старт) с другой задачей"></span>';
-      return '<div class="bar' + (outside ? " outside-label" : "") + '"' + (printMode ? "" : ' data-open="' + t.id + '"') + ' style="left:' + left + 'px;top:' + (row.top + 7) + "px;width:" + w + "px;height:" + (row.height - 14) + 'px;">' +
+      return '<div class="bar' + (outside ? " outside-label" : "") + (pct >= 60 ? " onfill" : "") + '"' + (printMode ? "" : ' data-open="' + t.id + '"') + ' style="left:' + left + 'px;top:' + (row.top + 7) + "px;width:" + w + "px;height:" + (row.height - 14) + 'px;">' +
         '<span class="fill-bg" style="background:' + color + '"></span>' +
         '<span class="fill-progress" style="width:' + pct + "%;background:" + color + '"></span>' +
         (outside ? '<span class="bar-label">' + escapeHtml(t.title) + "</span>" : '<span class="bar-label">' + escapeHtml(t.title) + "</span>") +

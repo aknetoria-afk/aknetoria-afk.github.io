@@ -70,9 +70,10 @@
   .gbar .gfill { position:absolute; left:0; top:0; bottom:0; border-radius:3px; opacity:.9; max-width:100%; }
   .gbar .gl { position:absolute; left:100%; top:0; margin-left:8px; font-size:11px; font-weight:600; color:var(--ink-soft); white-space:nowrap; line-height:14px; }
   .bar { position:absolute; border-radius:3px; display:flex; align-items:center; }
-  .bar .bg { position:absolute; inset:0; opacity:.28; border-radius:3px; }
+  .bar .bg { position:absolute; inset:0; opacity:.38; border-radius:3px; }
   .bar .pg { position:absolute; top:0; left:0; bottom:0; border-radius:3px; }
-  .bar .lbl { position:relative; z-index:1; font-size:11px; font-weight:600; color:#fff; padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 1px rgba(0,0,0,.25); }
+  .bar .lbl { position:relative; z-index:1; font-size:11px; font-weight:600; color:var(--ink); padding:0 7px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar.onfill .lbl { color:#fff; text-shadow:0 1px 1px rgba(0,0,0,.25); }
   .bar.out .lbl { position:absolute; left:100%; margin-left:6px; color:var(--ink); text-shadow:none; }
   .ms { position:absolute; width:15px; height:15px; transform:rotate(45deg); }
   .msl { position:absolute; font-size:11px; font-weight:600; white-space:nowrap; }
@@ -243,8 +244,8 @@
 
     // header
     var hd = "", x = 0, di = 0, wn = 1;
-    while (di < total) { var span = Math.min(7, total - di); hd += '<div class="week" style="left:' + x + "px;width:" + span * dw + 'px">Неделя ' + wn + "</div>"; x += span * dw; di += span; wn++; }
-    for (var i = 0; i < total; i++) hd += '<div class="dayCell' + (isWorking(i + 1) ? "" : " off") + '" style="left:' + i * dw + "px;width:" + dw + 'px">' + (dw >= 15 ? i + 1 : "") + "</div>";
+    while (di < total) { var span = Math.min(7, total - di); hd += '<div class="week" style="left:' + x + "px;width:" + span * dw + 'px">' + (span * dw < 84 ? "Н" + wn : "Неделя " + wn) + "</div>"; x += span * dw; di += span; wn++; }
+    for (var i = 0; i < total; i++) hd += '<div class="dayCell' + (isWorking(i + 1) ? "" : " off") + '" style="left:' + i * dw + "px;width:" + dw + 'px;' + (dw < 20 ? "font-size:9px;" : "") + '">' + (dw >= 12 ? i + 1 : "") + "</div>";
 
     // grid + bars
     var grid = "";
@@ -267,7 +268,7 @@
       var s = num(t.start), e = num(t.end || t.start), left = (s - 1) * dw, col = esc(t.color || "#2CB6D1");
       if (t.milestone) return '<div class="ms" style="left:' + left + "px;top:" + (r.top + r.h / 2 - 7) + "px;background:" + col + '"></div><div class="msl" style="left:' + (left + 14) + "px;top:" + (r.top + r.h / 2 - 8) + 'px">' + esc(t.title) + "</div>";
       var w = Math.max((e - s + 1) * dw - 3, 6), out = w < 46, p = Math.max(0, Math.min(100, t.progress || 0));
-      return '<div class="bar' + (out ? " out" : "") + '" style="left:' + left + "px;top:" + (r.top + 7) + "px;width:" + w + "px;height:" + (r.h - 14) + 'px"><span class="bg" style="background:' + col + '"></span><span class="pg" style="width:' + p + "%;background:" + col + '"></span><span class="lbl">' + esc(t.title) + "</span></div>";
+      return '<div class="bar' + (out ? " out" : "") + (p >= 60 ? " onfill" : "") + '" style="left:' + left + "px;top:" + (r.top + 7) + "px;width:" + w + "px;height:" + (r.h - 14) + 'px"><span class="bg" style="background:' + col + '"></span><span class="pg" style="width:' + p + "%;background:" + col + '"></span><span class="lbl">' + esc(t.title) + "</span></div>";
     }).join("");
 
     var paths = "";
